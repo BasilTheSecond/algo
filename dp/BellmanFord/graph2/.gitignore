@@ -1,0 +1,6 @@
+*.sdf
+*.suo
+*.opensdf
+BellmanFord/Debug/
+/Debug/
+/ipch/
