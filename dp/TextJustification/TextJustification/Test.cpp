@@ -13,10 +13,12 @@ public:
 	
 private:
 	void mSplitText(const std::string& text);
+	void mCalculateCosts();
 
 private:
 	std::vector<std::string> m_words;
 	const int m_lineWidth;
+	std::vector<int> m_costs;
 };
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -33,6 +35,7 @@ TextJustification::TextJustification(const std::string& text, int lineWidth) :
 {
 	mSplitText(text);
 	mPrintWords();
+	mCalculateCosts();
 }
 
 TextJustification::~TextJustification()
@@ -56,5 +59,14 @@ void TextJustification::mPrintWords()
 	for (size_t i = 0; i < m_words.size(); i++)
 	{
 		std::cout << "[" << i << "]: " << m_words[i] << std::endl;
+	}
+}
+
+void TextJustification::mCalculateCosts()
+{
+	m_costs.clear();
+	for (size_t i = 0; i < m_words.size(); i++)
+	{
+		m_costs.push_back(0);
 	}
 }
