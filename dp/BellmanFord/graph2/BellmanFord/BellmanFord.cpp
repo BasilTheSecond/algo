@@ -6,35 +6,35 @@
 #include <iostream>
 #include <algorithm>
 
-static void iterativeBellmanFord();
-static const int inf = std::numeric_limits<int>::max();
-static const int wSA = 10;
-static const int wSE = 8;
-static const int wED = 1;
-static const int wDA = -4;
-static const int wDC = -1;
-static const int wAC = 2;
-static const int wCB = -2;
-static const int wBA = 1;
+void iterativeBellmanFord();
+void recursiveBellmanFord();
+int deltaSS(int k);
+const int inf = std::numeric_limits<int>::max();
+const int wSA = 10;
+const int wSE = 8;
+const int wED = 1;
+const int wDA = -4;
+const int wDC = -1;
+const int wAC = 2;
+const int wCB = -2;
+const int wBA = 1;
+std::vector<int> dSS;
+std::vector<int> dSA;
+std::vector<int> dSB;
+std::vector<int> dSC;
+std::vector<int> dSD;
+std::vector<int> dSE;
 
-int 
-_tmain(int argc, _TCHAR* argv[])
+int _tmain(int argc, _TCHAR* argv[])
 {
 	iterativeBellmanFord();
 	getchar();
 	return 0;
 }
 
-static void 
-iterativeBellmanFord()
+void iterativeBellmanFord()
 {
 	std::cout << "iterativeBellmanFord" << std::endl;
-	std::vector<int> dSS;
-	std::vector<int> dSA;
-	std::vector<int> dSB;
-	std::vector<int> dSC;
-	std::vector<int> dSD;
-	std::vector<int> dSE;
 	dSS.push_back(0);
 	dSA.push_back(inf);
 	dSB.push_back(inf);
@@ -59,4 +59,15 @@ iterativeBellmanFord()
 	std::cout << "delta(S,C)=" << dSC[5] << std::endl;
 	std::cout << "delta(S,D)=" << dSD[5] << std::endl;
 	std::cout << "delta(S,E)=" << dSE[5] << std::endl;
+}
+
+void recursiveBellmanFord()
+{
+	std::cout << "recursiveBellmanFord" << std::endl;
+
+}
+
+int deltaSS(int k)
+{
+	return 0;
 }
