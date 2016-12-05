@@ -1,0 +1,6 @@
+*.sdf
+*.suo
+*.opensdf
+TextJustification/Debug/
+/Debug/
+/ipch/
