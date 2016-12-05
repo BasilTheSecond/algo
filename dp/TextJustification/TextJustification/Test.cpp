@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <algorithm>
 
 class TextJustification
 {
@@ -18,8 +19,13 @@ private:
 private:
 	std::vector<std::string> m_words;
 	const int m_lineWidth;
-	std::vector<int> m_costs;
+	std::vector<double> m_costs;
+
+private:
+	static const double k_inf;
 };
+
+const double TextJustification::k_inf = std::numeric_limits<double>::max();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -65,8 +71,14 @@ void TextJustification::mPrintWords()
 void TextJustification::mCalculateCosts()
 {
 	m_costs.clear();
-	for (size_t i = 0; i < m_words.size(); i++)
+	m_costs.resize(m_words.size() + 1, k_inf);
+	m_costs[m_words.size()] = 0;
+	for (size_t i = m_words.size(); i >= 0; i--)
 	{
-		m_costs.push_back(0);
+		for (size_t k = i + 1; i < m_words.size(); k++)
+		{
+			double cost = 0;
+			m_costs[i] = std::min(m_costs[i], std::pow(cost, 3) + m_costs[k]);
+		}
 	}
 }
