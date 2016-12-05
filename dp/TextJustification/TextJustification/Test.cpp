@@ -15,6 +15,7 @@ public:
 private:
 	void mSplitText(const std::string& text);
 	void mCalculateCosts();
+	double mCost(int i, int j);
 
 private:
 	std::vector<std::string> m_words;
@@ -71,14 +72,20 @@ void TextJustification::mPrintWords()
 void TextJustification::mCalculateCosts()
 {
 	m_costs.clear();
-	m_costs.resize(m_words.size() + 1, k_inf);
-	m_costs[m_words.size()] = 0;
-	for (size_t i = m_words.size(); i >= 0; i--)
+	int n = m_words.size();
+	m_costs.resize(n + 1, k_inf);
+	m_costs[n] = 0;
+	m_costs[n - 1] = m_costs[n] + mCost(n - 1, n);
+}
+
+double TextJustification::mCost(int i, int j)
+{
+	int totalWidth = 0;
+	for (int k = i; k < j; k++)
 	{
-		for (size_t k = i + 1; i < m_words.size(); k++)
-		{
-			double cost = 0;
-			m_costs[i] = std::min(m_costs[i], std::pow(cost, 3) + m_costs[k]);
-		}
+		totalWidth += m_words[k].size();
 	}
+	totalWidth += (j - i - 1); // space
+	int extraSpace = m_lineWidth - totalWidth;
+	return extraSpace < 0 ? k_inf : std::pow(extraSpace, 3);
 }
