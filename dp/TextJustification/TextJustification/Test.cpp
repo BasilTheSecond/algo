@@ -7,7 +7,7 @@
 class TextJustification
 {
 public:
-	TextJustification(const std::string& text);
+	TextJustification(const std::string& text, int lineWidth);
 	~TextJustification();
 	void mPrintWords();
 	
@@ -16,20 +16,23 @@ private:
 
 private:
 	std::vector<std::string> m_words;
+	const int m_lineWidth;
 };
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	std::string text("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).");
-	TextJustification textJustification(text);
-	textJustification.mPrintWords();
+	int lineWidth = 80;
+	TextJustification textJustification(text, lineWidth);
 	getchar();
 	return 0;
 }
 
-TextJustification::TextJustification(const std::string& text)
+TextJustification::TextJustification(const std::string& text, int lineWidth) :
+	m_lineWidth(lineWidth)
 {
 	mSplitText(text);
+	mPrintWords();
 }
 
 TextJustification::~TextJustification()
