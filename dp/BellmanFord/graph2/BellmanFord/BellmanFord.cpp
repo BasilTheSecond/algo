@@ -76,6 +76,11 @@ void iterativeBellmanFord()
 void recursiveBellmanFord()
 {
 	std::cout << "recursiveBellmanFord" << std::endl;
+	memdSA[0] = inf;
+	memdSB[0] = inf;
+	memdSC[0] = inf;
+	memdSD[0] = inf;
+	memdSE[0] = inf;
 	std::cout << "delta(S,S)=" << deltaSS(5) << std::endl;
 	std::cout << "delta(S,A)=" << deltaSA(5) << std::endl;
 	std::cout << "delta(S,B)=" << deltaSB(5) << std::endl;
@@ -93,9 +98,24 @@ int deltaSA(int k)
 {
 	if (memdSA.find(k) == memdSA.end())
 	{
-		memdSA[k] = std::min(deltaSD(k - 1) + wDA,
-								std::min(deltaSB(k - 1) + wBA,
-													deltaSS(k - 1) + wSA));
+		int d1 = deltaSD(k - 1);
+		if (d1 != inf)
+		{
+			d1 += wDA;
+		}
+		int d2 = deltaSB(k - 1);
+		if (d2 != inf)
+		{
+			d2 += wBA;
+		}
+		int d3 = deltaSS(k - 1);
+		if (d3 != inf)
+		{
+			d3 += wSA;
+		}
+		memdSA[k] = std::min(d1,
+								std::min(d2,
+													d3));
 	}
 	return memdSA[k];
 }
@@ -104,7 +124,12 @@ int deltaSB(int k)
 {
 	if (memdSB.find(k) == memdSB.end())
 	{
-		memdSB[k] = deltaSC(k - 1) + wCB;
+		int d = deltaSC(k - 1);
+		if (d != inf)
+		{
+			d += wCB;
+		}
+		memdSB[k] = d;
 	}
 	return memdSB[k];
 }
@@ -113,8 +138,18 @@ int deltaSC(int k)
 {
 	if (memdSC.find(k) == memdSC.end())
 	{
-		memdSC[k] = std::min(deltaSD(k - 1) + wDC,
-													deltaSA(k - 1) + wAC);
+		int d1 = deltaSD(k - 1);
+		if (d1 != inf)
+		{
+			d1 += wDC;
+		}
+		int d2 = deltaSA(k - 1);
+		if (d2 != inf)
+		{
+			d2 += wAC;
+		}
+		memdSC[k] = std::min(d1,
+													d2);
 	}
 	return memdSC[k];
 }
@@ -123,7 +158,12 @@ int deltaSD(int k)
 {
 	if (memdSD.find(k) == memdSD.end())
 	{
-		memdSD[k] = deltaSE(k - 1) + wED;
+		int d = deltaSE(k - 1);
+		if (d != inf)
+		{
+			d += wED;
+		}
+		memdSD[k] = d;
 	}
 	return memdSD[k];
 }
@@ -132,7 +172,12 @@ int deltaSE(int k)
 {
 	if (memdSE.find(k) == memdSE.end())
 	{
-		memdSE[k] = deltaSS(k - 1) + wSE;
+		int d = deltaSS(k - 1);
+		if (d != inf)
+		{
+			d += wSE;
+		}
+		memdSE[k] = d;
 	}
 	return memdSE[k];
 }
