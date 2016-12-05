@@ -16,6 +16,7 @@ int deltaSC(int k);
 int deltaSD(int k);
 int deltaSE(int k);
 const int inf = std::numeric_limits<int>::max();
+const int wSS = 0;
 const int wSA = 10;
 const int wSE = 8;
 const int wED = 1;
@@ -35,6 +36,7 @@ std::map<int, int> memdSB;
 std::map<int, int> memdSC;
 std::map<int, int> memdSD;
 std::map<int, int> memdSE;
+std::map<char, char> parent;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -59,18 +61,130 @@ void iterativeBellmanFord()
 		dSA.push_back(std::min(dSD[k - 1] != inf ? dSD[k - 1] + wDA : inf,
 									std::min(dSB[k - 1] != inf ? dSB[k - 1] + wBA : inf,
 														dSS[k - 1] != inf ? dSS[k - 1] + wSA : inf)));
+		if (dSA[k] != inf)
+		{
+			if (dSD[k - 1] != inf && dSA[k] == dSD[k - 1] + wDA)
+			{
+				parent['A'] = 'D';
+			}
+			else if (dSB[k - 1] != inf && dSA[k] == dSB[k - 1] + wBA)
+			{
+				parent['A'] = 'B';
+			}
+			else if (dSS[k - 1] != inf && dSA[k] == dSS[k - 1] + wSA)
+			{
+				parent['A'] = 'S';
+			}
+		}
 		dSB.push_back(dSC[k - 1] != inf ? dSC[k - 1] + wCB : inf);
+		if (dSB[k] != inf)
+		{
+			if (dSC[k - 1] != inf)
+			{
+				parent['B'] = 'C';
+			}
+		}
 		dSC.push_back(std::min(dSD[k - 1] != inf ? dSD[k - 1] + wDC : inf,
 														dSA[k - 1] != inf ? dSA[k - 1] + wAC : inf));
+		if (dSC[k] != inf)
+		{
+			if (dSD[k - 1] != inf && dSC[k] == dSD[k - 1] + wDC)
+			{
+				parent['C'] = 'D';
+			}
+			else if (dSA[k - 1] != inf && dSC[k] == dSA[k - 1] + wAC)
+			{
+				parent['C'] = 'A';
+			}
+		}
 		dSD.push_back(dSE[k - 1] != inf ? dSE[k - 1] + wED : inf);
+		if (dSD[k] != inf)
+		{
+			if (dSE[k - 1] != inf)
+			{
+				parent['D'] = 'E';
+			}
+		}
 		dSE.push_back(dSS[k - 1] != inf ? dSS[k - 1] + wSE : inf);
+		if (dSE[k] != inf)
+		{
+			if (dSS[k - 1] != inf)
+			{
+				parent['E'] = 'S';
+			}
+		}
 	}
 	std::cout << "delta(S,S)=" << dSS[5] << std::endl;
 	std::cout << "delta(S,A)=" << dSA[5] << std::endl;
+	for (char c = 'A'; true; c = parent[c])
+	{
+		std::cout << c;
+		if (c == 'S')
+		{
+			std::cout << std::endl;
+			break;
+		}
+		else
+		{
+			std::cout << "<-";
+		}
+	}
 	std::cout << "delta(S,B)=" << dSB[5] << std::endl;
+	for (char c = 'B'; true; c = parent[c])
+	{
+		std::cout << c;
+		if (c == 'S')
+		{
+			std::cout << std::endl;
+			break;
+		}
+		else
+		{
+			std::cout << "<-";
+		}
+	}
 	std::cout << "delta(S,C)=" << dSC[5] << std::endl;
+	for (char c = 'C'; true; c = parent[c])
+	{
+		std::cout << c;
+		if (c == 'S')
+		{
+			std::cout << std::endl;
+			break;
+		}
+		else
+		{
+			std::cout << "<-";
+		}
+	}
 	std::cout << "delta(S,D)=" << dSD[5] << std::endl;
+	for (char c = 'D'; true; c = parent[c])
+	{
+		std::cout << c;
+		if (c == 'S')
+		{
+			std::cout << std::endl;
+			break;
+		}
+		else
+		{
+			std::cout << "<-";
+		}
+	}
 	std::cout << "delta(S,E)=" << dSE[5] << std::endl;
+	for (char c = 'E'; true; c = parent[c])
+	{
+		std::cout << c;
+		if (c == 'S')
+		{
+			std::cout << std::endl;
+			break;
+		}
+		else
+		{
+			std::cout << "<-";
+		}
+	}
 }
 
 void recursiveBellmanFord()
