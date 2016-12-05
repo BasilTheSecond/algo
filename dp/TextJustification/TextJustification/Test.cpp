@@ -76,6 +76,9 @@ void TextJustification::mCalculateCosts()
 	m_costs.resize(n + 1, k_inf);
 	m_costs[n] = 0;
 	m_costs[n - 1] = std::min(m_costs[n] + mCost(n - 1, n), m_costs[n - 1]);
+	//
+	m_costs[n - 2] = std::min(m_costs[n - 1] + mCost(n - 2, n - 1), m_costs[n - 2]);
+	m_costs[n - 2] = std::min(m_costs[n - 1] + mCost(n - 2, n), m_costs[n - 2]);
 }
 
 double TextJustification::mCost(int i, int j)
