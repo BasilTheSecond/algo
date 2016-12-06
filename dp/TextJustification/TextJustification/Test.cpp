@@ -34,12 +34,18 @@ const double TextJustification::k_inf = std::numeric_limits<double>::max();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	std::ifstream ifile("unjustified.txt");
-	int lineWidth = 80;
-	TextJustification textJustification1(ifile, lineWidth);
+	std::ifstream ifile1("unjustified.txt");
+	int lineWidth1 = 80;
+	TextJustification textJustification1(ifile1, lineWidth1);
 	textJustification1.mPrintWords();
-	std::ofstream ofile("justified.txt");
-	textJustification1.mPrintJustified(ofile);
+	std::ofstream ofile1("justified1.txt");
+	textJustification1.mPrintJustified(ofile1);
+	std::string text2("It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).");
+	int lineWidth2 = 50;
+	TextJustification textJustification2(text2, lineWidth2);
+	textJustification2.mPrintWords();
+	std::ofstream ofile2("justified2.txt");
+	textJustification2.mPrintJustified(ofile2);
 	getchar();
 	return 0;
 }
