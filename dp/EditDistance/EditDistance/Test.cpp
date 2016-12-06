@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 // Explanations of insertion, deletion and substitution steps:
 // Elements in the edit step table represent x in the various stages of transformation
@@ -71,7 +72,12 @@ private:
 	std::string m_x;
 	std::string m_y;
 	std::vector<std::vector<double>> m_table;
+
+private:
+	static const double k_inf;
 };
+
+const double EditDistance::k_inf = std::numeric_limits<double>::max();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -100,6 +106,16 @@ EditDistance::EditDistance(std::string& x, std::string& y) :
 	for (size_t j = 1; j < m_y.size(); j++)
 	{
 		m_table[0][j] = m_table[0][j - 1] + mInsertionCost(0, j - 1);
+	}
+	for (size_t i = 1; i < m_x.size(); i++)
+	{
+		for (size_t j = 1; j < m_y.size(); j++)
+		{
+			m_table[i][j] = k_inf;
+			m_table[i][j] = std::min(m_table[i - 1][j - 1] + mSubstitutionCost(i, j), m_table[i][j]);
+			m_table[i][j] = std::min(m_table[i - 1][j] + mDeletionCost(i - 1, j), m_table[i][j]);
+			m_table[i][j] = std::min(m_table[i][j - 1] + mInsertionCost(i, j - 1), m_table[i][j]);
+		}
 	}
 }
 
