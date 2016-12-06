@@ -15,7 +15,7 @@ public:
 private:
 	std::string m_x;
 	std::string m_y;
-	std::vector<std::vector<int>> m_table;
+	std::vector<std::vector<double>> m_table;
 };
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -37,6 +37,7 @@ EditDistance::EditDistance(std::string& x, std::string& y) :
 	{
 		m_table[i].resize(m_y.size());
 	}
+	m_table[0][0] = mSubstitutionCost(0, 0);
 }
 
 EditDistance::~EditDistance()
