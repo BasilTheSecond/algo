@@ -77,7 +77,7 @@ private:
 private:
 	std::string m_x;
 	std::string m_y;
-	std::vector<std::vector<std::pair<std::pair<int, int>, double>>> m_table; // table with back-trace
+	std::map<std::pair<int, int>, std::pair<std::pair<int, int>, double>> m_table; // table with back-trace
 };
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -97,43 +97,30 @@ EditDistance::EditDistance(std::string& x, std::string& y) :
 	m_x(x),
 	m_y(y)
 {
-	m_table.resize(m_x.size());
-	for (size_t i = 0; i < m_table.size(); i++)
-	{
-		m_table[i].resize(m_y.size());
-	}
-	m_table[0][0] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(-1, -1), mSubstitutionCost(0, 0));
-	std::pair<std::pair<int, int>, double>(std::pair<int, int>(-1, -1), mSubstitutionCost(0, 0));
+	m_table[std::pair<int, int>(0,0)] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(-1, -1), mSubstitutionCost(0, 0));
 	for (size_t i = 1; i < m_x.size(); i++)
 	{
-		m_table[i][0] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, 0), m_table[i - 1][0].second + mDeletionCost(i, 0));
+		m_table[std::pair<int, int>(i, 0)] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, 0), m_table[std::pair<int, int>(i - 1, 0)].second + mDeletionCost(i, 0));
 	}
 	for (size_t j = 1; j < m_y.size(); j++)
 	{
-		m_table[0][j] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(0, j - 1), m_table[0][j - 1].second + mInsertionCost(0, j));
+		m_table[std::pair<int, int>(0, j)] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(0, j - 1), m_table[std::pair<int, int>(0, j - 1)].second + mInsertionCost(0, j));
 	}
 	for (size_t i = 1; i < m_x.size(); i++)
 	{
 		for (size_t j = 1; j < m_y.size(); j++)
 		{
 			std::vector<std::pair<std::pair<int, int>, double>> costs;
-			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j - 1), m_table[i - 1][j - 1].second + mSubstitutionCost(i, j)));
-			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j), m_table[i - 1][j].second + mDeletionCost(i, j)));
-			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i, j - 1), m_table[i][j - 1].second + mInsertionCost(i, j)));
+			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j - 1), m_table[std::pair<int, int>(i - 1, j - 1)].second + mSubstitutionCost(i, j)));
+			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].second + mDeletionCost(i, j)));
+			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].second + mInsertionCost(i, j)));
 			std::sort(costs.begin(), 
 								costs.end(), 
 								[](std::pair<std::pair<int, int>, double>& a, std::pair<std::pair<int, int>, double>& b)
 								{
 									return a.second != b.second ? a.second < b.second : a.first < b.first;
 								});
-			//if (i == 7 && j == 8)
-			//{
-			//	m_table[i][j] = costs[0];
-			//}
-			//else
-			{
-				m_table[i][j] = costs[0];
-			}
+			m_table[std::pair<int, int>(i, j)] = costs[0];
 		}
 	}
 }
@@ -158,10 +145,10 @@ double EditDistance::mSubstitutionCost(int i, int j)
 
 void EditDistance::mPrintPath()
 {
-	std::pair<std::pair<int, int>, double> root = m_table[m_x.size() - 1][m_y.size() - 1];
+	std::pair<std::pair<int, int>, double> root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
 	std::cout << "(" << m_x.size() - 1 << "," << m_y.size() - 1 << ")";
 	std::cout << "->";
-	for (std::pair<std::pair<int, int>, double> next = root; true; next = m_table[next.first.first][next.first.second])
+	for (std::pair<std::pair<int, int>, double> next = root; true; next = m_table[std::pair<int, int>(next.first.first, next.first.second)])
 	{
 		std::cout << "(" << next.first.first << "," << next.first.second << ")";
 		if (next.first == std::pair<int, int>(0, 0))
@@ -178,7 +165,7 @@ void EditDistance::mPrintPath()
 
 double EditDistance::mGetDistance()
 {
-	return  m_table[m_x.size() - 1][m_y.size() - 1].second;
+	return  m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)].second;
 }
 
 void EditDistance::mPrintSteps()
