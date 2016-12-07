@@ -196,12 +196,12 @@ void EditDistance::mPrintSteps()
 	std::cout << m_x << "||" << std::endl;
 	for (BackTrace next = root; true; next = m_table[std::pair<int, int>(next.m_parent)])
 	{
-		std::cout << "(" << next.m_parent.first << "," << next.m_parent.second << ")";
-		std::cout << m_x.substr(0, next.m_parent.first + 1) << "||" << m_y.substr(next.m_parent.second + 1) << std::endl;
+		std::cout << "(" << next.m_parent.first << "," << next.m_parent.second << "): ";
+		std::cout << m_x.substr(0, next.m_parent.first + 1) << "||" << m_y.substr(next.m_parent.second + 1) << " " << next.m_operation << std::endl;
 		if (next.m_parent == std::pair<int, int>(0, 0))
 		{
 			std::cout << "(" << m_table[std::pair<int, int>(0, 0)].m_parent.first << "," << m_table[std::pair<int, int>(0, 0)].m_parent.second << "): ";
-			std::cout << "||" << m_y << std::endl;
+			std::cout << "||" << m_y << " " << next.m_operation << std::endl;
 			break;
 		}
 	}
