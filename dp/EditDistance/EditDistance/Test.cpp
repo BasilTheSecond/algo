@@ -112,9 +112,12 @@ EditDistance::EditDistance(std::string& x, std::string& y) :
 		for (size_t j = 1; j < m_y.size(); j++)
 		{
 			m_table[i][j] = k_inf;
-			m_table[i][j] = std::min(m_table[i - 1][j - 1] + mSubstitutionCost(i, j), m_table[i][j]);
-			m_table[i][j] = std::min(m_table[i - 1][j] + mDeletionCost(i - 1, j), m_table[i][j]);
-			m_table[i][j] = std::min(m_table[i][j - 1] + mInsertionCost(i, j - 1), m_table[i][j]);
+			double substitution = m_table[i - 1][j - 1] + mSubstitutionCost(i, j);
+			double deletion = m_table[i - 1][j] + mDeletionCost(i - 1, j);
+			double insertion = m_table[i][j - 1] + mInsertionCost(i, j - 1);
+			m_table[i][j] = std::min(substitution, m_table[i][j]);
+			m_table[i][j] = std::min(deletion, m_table[i][j]);
+			m_table[i][j] = std::min(insertion, m_table[i][j]);
 		}
 	}
 }
