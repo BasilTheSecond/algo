@@ -97,11 +97,11 @@ EditDistance::EditDistance(std::string& x, std::string& y) :
 	m_table[0][0] = mSubstitutionCost(0, 0);
 	for (size_t i = 1; i < m_x.size(); i++)
 	{
-		m_table[i][0] = m_table[i - 1][0] + mDeletionCost(i - 1, 0);
+		m_table[i][0] = m_table[i - 1][0] + mDeletionCost(i, 0);
 	}
 	for (size_t j = 1; j < m_y.size(); j++)
 	{
-		m_table[0][j] = m_table[0][j - 1] + mInsertionCost(0, j - 1);
+		m_table[0][j] = m_table[0][j - 1] + mInsertionCost(0, j);
 	}
 	for (size_t i = 1; i < m_x.size(); i++)
 	{
