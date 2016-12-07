@@ -111,11 +111,16 @@ private:
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	std::string x("#EXECUTION");
-	std::string y("#INTENTION");
-	LevenshteinDistance levenshteinDistance(x, y);
+	std::string x1("#EXECUTION");
+	std::string y1("#INTENTION");
+	LevenshteinDistance levenshteinDistance1(x1, y1);
 	std::cout << "Steps:" << std::endl;
-	levenshteinDistance.mPrintSteps();
+	levenshteinDistance1.mPrintSteps();
+	std::string x2("#HELLO,WORLD");
+	std::string y2("#BLAH,BLAH");
+	LevenshteinDistance levenshteinDistance2(x2, y2);
+	std::cout << "Steps:" << std::endl;
+	levenshteinDistance2.mPrintSteps();
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
