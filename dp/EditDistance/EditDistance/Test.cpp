@@ -65,6 +65,9 @@ class EditDistance
 public:
 	EditDistance(std::string& x, std::string& y);
 	~EditDistance();
+	void mPrint();
+
+private:
 	double mInsertionCost(int i, int j);
 	double mDeletionCost(int i, int j);
 	double mSubstitutionCost(int i, int j);
@@ -80,6 +83,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string x("#EXECUTION");
 	std::string y("#INTENTION");
 	EditDistance editDistance(x, y);
+	editDistance.mPrint();
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
@@ -146,5 +150,25 @@ double EditDistance::mDeletionCost(int i, int j)
 double EditDistance::mSubstitutionCost(int i, int j)
 {
 	return (m_x[i] == m_y[j]) ? 0 : 2;
+}
+
+void EditDistance::mPrint()
+{
+	std::pair<std::pair<int, int>, double> root = m_table[m_x.size() - 1][m_y.size() - 1];
+	std::cout << "(" << m_x.size() - 1 << "," << m_y.size() - 1 << ")";
+	std::cout << "->";
+	for (std::pair<std::pair<int, int>, double> next = root; true; next = m_table[next.first.first][next.first.second])
+	{
+		std::cout << "(" << next.first.first << "," << next.first.second << ")";
+		if (next.first == std::pair<int, int>(0, 0))
+		{
+			std::cout << std::endl;
+			break;
+		}
+		else
+		{
+			std::cout << "->";
+		}
+	}
 }
 
