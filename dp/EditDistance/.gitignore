@@ -1,0 +1,6 @@
+*.sdf
+*.suo
+*.opensdf
+EditDistance/Debug/
+/Debug/
+/ipch/
