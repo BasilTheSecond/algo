@@ -21,11 +21,13 @@ public:
 	class Item
 	{
 	public:
-		Item(std::string& description);
+		Item(std::string& description, double value, int size);
 		~Item();
 
 	public:
 		std::string m_description;
+		double m_value;
+		int m_size;
 	};
 
 public:
@@ -40,9 +42,9 @@ private:
 int _tmain(int argc, _TCHAR* argv[])
 {
 	std::vector<KnapSack::Item> items;
-	items.push_back(KnapSack::Item(std::string("gold watch")));
-	items.push_back(KnapSack::Item(std::string("box of matches")));
-	items.push_back(KnapSack::Item(std::string("sandwich")));
+	items.push_back(KnapSack::Item(std::string("gold watch"), 10, 3));
+	items.push_back(KnapSack::Item(std::string("box of matches"), 5, 1));
+	items.push_back(KnapSack::Item(std::string("sandwich"), 4, 4));
 	KnapSack knapSack(items);
 	std::cout << "Press any key to exit..." << std::endl;
 	getchar();
@@ -66,8 +68,10 @@ KnapSack::Value::~Value()
 {
 }
 
-KnapSack::Item::Item(std::string& description) :
-m_description(description)
+KnapSack::Item::Item(std::string& description, double value, int size) :
+m_description(description),
+m_value(value),
+m_size(size)
 {
 }
 
