@@ -64,30 +64,47 @@ class EditDistance
 {
 public:
 	EditDistance(std::string& x, std::string& y);
-	~EditDistance();
+	virtual ~EditDistance();
 	void mPrintPath();
 	void mPrintSteps();
 	double mGetDistance();
 
-private:
-	double mInsertionCost(int i, int j);
-	double mDeletionCost(int i, int j);
-	double mSubstitutionCost(int i, int j);
+protected:
+	void mComputeTable();
 
-private:
+protected:
 	std::string m_x;
 	std::string m_y;
+
+private:
+	virtual double mInsertionCost(int i, int j) = 0;
+	virtual double mDeletionCost(int i, int j) = 0;
+	virtual double mSubstitutionCost(int i, int j) = 0;
+
+private:
 	std::map<std::pair<int, int>, std::pair<std::pair<int, int>, double>> m_table; // table with back-trace
+};
+
+class LevenshteinDistance : public EditDistance
+{
+public:
+	LevenshteinDistance(std::string& x, std::string& y);
+	virtual ~LevenshteinDistance();
+
+private:
+	virtual double mInsertionCost(int i, int j);
+	virtual double mDeletionCost(int i, int j);
+	virtual double mSubstitutionCost(int i, int j);
 };
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	std::string x("#EXECUTION");
 	std::string y("#INTENTION");
-	EditDistance editDistance(x, y);
-	editDistance.mPrintPath();
-	std::cout << "Distance between: " << x << " and " << y << " : " << editDistance.mGetDistance() << std::endl;
-	editDistance.mPrintSteps();
+	LevenshteinDistance levenshteinDistance(x, y);
+	levenshteinDistance.mPrintPath();
+	std::cout << "Distance between: " << x << " and " << y << " : " << levenshteinDistance.mGetDistance() << std::endl;
+	levenshteinDistance.mPrintSteps();
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
@@ -97,7 +114,15 @@ EditDistance::EditDistance(std::string& x, std::string& y) :
 	m_x(x),
 	m_y(y)
 {
-	m_table[std::pair<int, int>(0,0)] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(-1, -1), mSubstitutionCost(0, 0));
+}
+
+EditDistance::~EditDistance()
+{
+}
+
+void EditDistance::mComputeTable()
+{
+	m_table[std::pair<int, int>(0, 0)] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(-1, -1), mSubstitutionCost(0, 0));
 	for (size_t i = 1; i < m_x.size(); i++)
 	{
 		m_table[std::pair<int, int>(i, 0)] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, 0), m_table[std::pair<int, int>(i - 1, 0)].second + mDeletionCost(i, 0));
@@ -114,33 +139,15 @@ EditDistance::EditDistance(std::string& x, std::string& y) :
 			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j - 1), m_table[std::pair<int, int>(i - 1, j - 1)].second + mSubstitutionCost(i, j)));
 			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].second + mDeletionCost(i, j)));
 			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].second + mInsertionCost(i, j)));
-			std::sort(costs.begin(), 
-								costs.end(), 
-								[](std::pair<std::pair<int, int>, double>& a, std::pair<std::pair<int, int>, double>& b)
-								{
-									return a.second != b.second ? a.second < b.second : a.first < b.first;
-								});
+			std::sort(costs.begin(),
+				costs.end(),
+				[](std::pair<std::pair<int, int>, double>& a, std::pair<std::pair<int, int>, double>& b)
+			{
+				return a.second != b.second ? a.second < b.second : a.first < b.first;
+			});
 			m_table[std::pair<int, int>(i, j)] = costs[0];
 		}
 	}
-}
-
-EditDistance::~EditDistance()
-{
-}
-
-double EditDistance::mInsertionCost(int i, int j)
-{
-	return 1;
-}
-
-double EditDistance::mDeletionCost(int i, int j)
-{
-	return 1;
-}
-double EditDistance::mSubstitutionCost(int i, int j)
-{
-	return (m_x[i] == m_y[j]) ? 0 : 2;
 }
 
 void EditDistance::mPrintPath()
@@ -170,4 +177,28 @@ double EditDistance::mGetDistance()
 
 void EditDistance::mPrintSteps()
 {
+}
+
+LevenshteinDistance::LevenshteinDistance(std::string& x, std::string& y) :
+	EditDistance(x, y)
+{
+	mComputeTable();
+}
+
+LevenshteinDistance::~LevenshteinDistance()
+{
+}
+
+double LevenshteinDistance::mInsertionCost(int i, int j)
+{
+	return 1;
+}
+
+double LevenshteinDistance::mDeletionCost(int i, int j)
+{
+	return 1;
+}
+double LevenshteinDistance::mSubstitutionCost(int i, int j)
+{
+	return (m_x[i] == m_y[j]) ? 0 : 2;
 }
