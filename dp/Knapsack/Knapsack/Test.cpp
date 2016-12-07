@@ -59,7 +59,7 @@ m_size(size)
 {
 	for (int j = 0; j <= m_size; j++)
 	{
-		m_values[std::pair<int, int>(0, j)] = Value(std::pair<int, int>(0, 0), 0);
+		m_values[std::pair<int, int>(m_items.size() - 1, j)] = Value(std::pair<int, int>(0, 0), j < m_items[m_items.size() - 1].m_size ? 0 : m_items[m_items.size() - 1].m_value);
 	}
 }
 
