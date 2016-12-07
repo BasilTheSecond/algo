@@ -118,11 +118,11 @@ EditDistance::EditDistance(std::string& x, std::string& y) :
 								{
 									return a.second != b.second ? a.second < b.second : a.first < b.first;
 								});
-			if (i == 7 && j == 8)
-			{
-				m_table[i][j] = costs[0];
-			}
-			else
+			//if (i == 7 && j == 8)
+			//{
+			//	m_table[i][j] = costs[0];
+			//}
+			//else
 			{
 				m_table[i][j] = costs[0];
 			}
