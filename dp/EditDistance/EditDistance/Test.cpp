@@ -177,6 +177,20 @@ double EditDistance::mGetDistance()
 
 void EditDistance::mPrintSteps()
 {
+	std::pair<std::pair<int, int>, double> root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
+	std::cout << "(" << (m_x.size() - 1) << "," << (m_y.size() - 1) << "): ";
+	std::cout << m_x << "||" << std::endl;
+	for (std::pair<std::pair<int, int>, double> next = root; true; next = m_table[std::pair<int, int>(next.first.first, next.first.second)])
+	{
+		std::cout << "(" << next.first.first << "," << next.first.second << "): ";
+		std::cout << m_x.substr(0, next.first.first + 1) << "||" << m_y.substr(next.first.second + 1) << std::endl;
+		if (next.first == std::pair<int, int>(0, 0))
+		{
+			std::cout << "(" << m_table[std::pair<int, int>(0, 0)].first.first << "," << m_table[std::pair<int, int>(0, 0)].first.second << "): ";
+			std::cout << "||" << m_y << std::endl;
+			break;
+		}
+	}
 }
 
 LevenshteinDistance::LevenshteinDistance(std::string& x, std::string& y) :
