@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <map>
 
 // Explanations of insertion, deletion and substitution steps:
 // Elements in the edit step table represent x in the various stages of transformation
@@ -72,12 +73,7 @@ private:
 	std::string m_x;
 	std::string m_y;
 	std::vector<std::vector<double>> m_table;
-
-private:
-	static const double k_inf;
 };
-
-const double EditDistance::k_inf = std::numeric_limits<double>::max();
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -111,13 +107,17 @@ EditDistance::EditDistance(std::string& x, std::string& y) :
 	{
 		for (size_t j = 1; j < m_y.size(); j++)
 		{
-			m_table[i][j] = k_inf;
-			double substitution = m_table[i - 1][j - 1] + mSubstitutionCost(i, j);
-			double deletion = m_table[i - 1][j] + mDeletionCost(i - 1, j);
-			double insertion = m_table[i][j - 1] + mInsertionCost(i, j - 1);
-			m_table[i][j] = std::min(substitution, m_table[i][j]);
-			m_table[i][j] = std::min(deletion, m_table[i][j]);
-			m_table[i][j] = std::min(insertion, m_table[i][j]);
+			std::vector<std::pair<std::pair<int, int>, double>> costs;
+			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j - 1), m_table[i - 1][j - 1] + mSubstitutionCost(i, j)));
+			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j), m_table[i - 1][j] + mDeletionCost(i, j)));
+			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i, j - 1), m_table[i][j - 1] + mInsertionCost(i, j)));
+			std::sort(costs.begin(), 
+								costs.end(), 
+								[](std::pair<std::pair<int, int>, double>& a, std::pair<std::pair<int, int>, double>& b)
+								{
+									return a.second != b.second ? a.second < b.second : a.first < b.first;
+								});
+			m_table[i][j] = costs[0].second;
 		}
 	}
 }
