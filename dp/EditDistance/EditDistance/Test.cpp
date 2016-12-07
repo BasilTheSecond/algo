@@ -66,6 +66,7 @@ public:
 	EditDistance(std::string& x, std::string& y);
 	~EditDistance();
 	void mPrintPath();
+	void mPrintSteps();
 	double mGetDistance();
 
 private:
@@ -86,6 +87,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	EditDistance editDistance(x, y);
 	editDistance.mPrintPath();
 	std::cout << "Distance between: " << x << " and " << y << " : " << editDistance.mGetDistance() << std::endl;
+	editDistance.mPrintSteps();
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
@@ -179,3 +181,6 @@ double EditDistance::mGetDistance()
 	return  m_table[m_x.size() - 1][m_y.size() - 1].second;
 }
 
+void EditDistance::mPrintSteps()
+{
+}
