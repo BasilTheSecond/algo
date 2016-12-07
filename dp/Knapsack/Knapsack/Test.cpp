@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <vector>
 
 class KnapSack
 {
@@ -20,30 +21,36 @@ public:
 	class Item
 	{
 	public:
-		Item(std::string& name);
+		Item(std::string& description);
 		~Item();
 
 	public:
-		std::string m_name;
+		std::string m_description;
 	};
 
 public:
-	KnapSack();
+	KnapSack(std::vector<Item>& items);
 	~KnapSack();
 
 private:
 	std::map<std::pair<int, int>, Value> m_values;
+	std::vector<Item>& m_items;
 };
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	KnapSack knapSack;
+	std::vector<KnapSack::Item> items;
+	items.push_back(KnapSack::Item(std::string("gold watch")));
+	items.push_back(KnapSack::Item(std::string("box of matches")));
+	items.push_back(KnapSack::Item(std::string("sandwich")));
+	KnapSack knapSack(items);
 	std::cout << "Press any key to exit..." << std::endl;
 	getchar();
 	return 0;
 }
 
-KnapSack::KnapSack()
+KnapSack::KnapSack(std::vector<Item>& items) :
+m_items(items)
 {
 }
 
@@ -59,8 +66,8 @@ KnapSack::Value::~Value()
 {
 }
 
-KnapSack::Item::Item(std::string& name) :
-m_name(name)
+KnapSack::Item::Item(std::string& description) :
+m_description(description)
 {
 }
 
