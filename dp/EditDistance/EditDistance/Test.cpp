@@ -65,7 +65,8 @@ class EditDistance
 public:
 	EditDistance(std::string& x, std::string& y);
 	~EditDistance();
-	void mPrint();
+	void mPrintPath();
+	double mGetDistance();
 
 private:
 	double mInsertionCost(int i, int j);
@@ -83,7 +84,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string x("#EXECUTION");
 	std::string y("#INTENTION");
 	EditDistance editDistance(x, y);
-	editDistance.mPrint();
+	editDistance.mPrintPath();
+	std::cout << "Distance between: " << x << " and " << y << " : " << editDistance.mGetDistance() << std::endl;
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
@@ -152,7 +154,7 @@ double EditDistance::mSubstitutionCost(int i, int j)
 	return (m_x[i] == m_y[j]) ? 0 : 2;
 }
 
-void EditDistance::mPrint()
+void EditDistance::mPrintPath()
 {
 	std::pair<std::pair<int, int>, double> root = m_table[m_x.size() - 1][m_y.size() - 1];
 	std::cout << "(" << m_x.size() - 1 << "," << m_y.size() - 1 << ")";
@@ -170,5 +172,10 @@ void EditDistance::mPrint()
 			std::cout << "->";
 		}
 	}
+}
+
+double EditDistance::mGetDistance()
+{
+	return  m_table[m_x.size() - 1][m_y.size() - 1].second;
 }
 
