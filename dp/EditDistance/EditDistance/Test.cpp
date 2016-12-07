@@ -82,7 +82,21 @@ private:
 	virtual double mSubstitutionCost(int i, int j) = 0;
 
 private:
-	std::map<std::pair<int, int>, std::pair<std::pair<int, int>, double>> m_table; // table with back-trace
+	class BackTrace
+	{
+	public:
+		BackTrace();
+		BackTrace(std::pair<int, int>& parent, double cost, std::string& operation);
+		~BackTrace();
+
+	public:
+		std::pair<int, int> m_parent;
+		double m_cost;
+		std::string m_operation;
+	};
+
+private:
+	std::map<std::pair<int, int>, BackTrace> m_table; // table with back-trace
 };
 
 class LevenshteinDistance : public EditDistance
@@ -122,29 +136,29 @@ EditDistance::~EditDistance()
 
 void EditDistance::mComputeTable()
 {
-	m_table[std::pair<int, int>(0, 0)] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(-1, -1), mSubstitutionCost(0, 0));
+	m_table[std::pair<int, int>(0, 0)] = BackTrace(std::pair<int, int>(-1, -1), mSubstitutionCost(0, 0), std::string("substitute"));
 	for (size_t i = 1; i < m_x.size(); i++)
 	{
-		m_table[std::pair<int, int>(i, 0)] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, 0), m_table[std::pair<int, int>(i - 1, 0)].second + mDeletionCost(i, 0));
+		m_table[std::pair<int, int>(i, 0)] = BackTrace(std::pair<int, int>(i - 1, 0), m_table[std::pair<int, int>(i - 1, 0)].m_cost + mDeletionCost(i, 0), std::string("delete"));
 	}
 	for (size_t j = 1; j < m_y.size(); j++)
 	{
-		m_table[std::pair<int, int>(0, j)] = std::pair<std::pair<int, int>, double>(std::pair<int, int>(0, j - 1), m_table[std::pair<int, int>(0, j - 1)].second + mInsertionCost(0, j));
+		m_table[std::pair<int, int>(0, j)] = BackTrace(std::pair<int, int>(0, j - 1), m_table[std::pair<int, int>(0, j - 1)].m_cost + mInsertionCost(0, j), std::string("insert"));
 	}
 	for (size_t i = 1; i < m_x.size(); i++)
 	{
 		for (size_t j = 1; j < m_y.size(); j++)
 		{
-			std::vector<std::pair<std::pair<int, int>, double>> costs;
-			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j - 1), m_table[std::pair<int, int>(i - 1, j - 1)].second + mSubstitutionCost(i, j)));
-			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].second + mDeletionCost(i, j)));
-			costs.push_back(std::pair<std::pair<int, int>, double>(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].second + mInsertionCost(i, j)));
+			std::vector<BackTrace> costs;
+			costs.push_back(BackTrace(std::pair<int, int>(i - 1, j - 1), m_table[std::pair<int, int>(i - 1, j - 1)].m_cost + mSubstitutionCost(i, j), std::string("substitute")));
+			costs.push_back(BackTrace(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].m_cost + mDeletionCost(i, j), std::string("delete")));
+			costs.push_back(BackTrace(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].m_cost + mInsertionCost(i, j), std::string("insert")));
 			std::sort(costs.begin(),
-				costs.end(),
-				[](std::pair<std::pair<int, int>, double>& a, std::pair<std::pair<int, int>, double>& b)
-			{
-				return a.second != b.second ? a.second < b.second : a.first < b.first;
-			});
+								costs.end(),
+								[](BackTrace& a, BackTrace& b)
+								{
+									return a.m_cost != b.m_cost ? a.m_cost < b.m_cost : a.m_cost < b.m_cost;
+								});
 			m_table[std::pair<int, int>(i, j)] = costs[0];
 		}
 	}
@@ -152,13 +166,13 @@ void EditDistance::mComputeTable()
 
 void EditDistance::mPrintPath()
 {
-	std::pair<std::pair<int, int>, double> root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
+	BackTrace root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
 	std::cout << "(" << m_x.size() - 1 << "," << m_y.size() - 1 << ")";
 	std::cout << "->";
-	for (std::pair<std::pair<int, int>, double> next = root; true; next = m_table[std::pair<int, int>(next.first.first, next.first.second)])
+	for (BackTrace next = root; true; next = m_table[next.m_parent])
 	{
-		std::cout << "(" << next.first.first << "," << next.first.second << ")";
-		if (next.first == std::pair<int, int>(0, 0))
+		std::cout << "(" << next.m_parent.first << "," << next.m_parent.second << ")";
+		if (next.m_parent == std::pair<int, int>(0, 0))
 		{
 			std::cout << std::endl;
 			break;
@@ -172,25 +186,40 @@ void EditDistance::mPrintPath()
 
 double EditDistance::mGetDistance()
 {
-	return  m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)].second;
+	return  m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)].m_cost;
 }
 
 void EditDistance::mPrintSteps()
 {
-	std::pair<std::pair<int, int>, double> root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
+	BackTrace root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
 	std::cout << "(" << (m_x.size() - 1) << "," << (m_y.size() - 1) << "): ";
 	std::cout << m_x << "||" << std::endl;
-	for (std::pair<std::pair<int, int>, double> next = root; true; next = m_table[std::pair<int, int>(next.first.first, next.first.second)])
+	for (BackTrace next = root; true; next = m_table[std::pair<int, int>(next.m_parent)])
 	{
-		std::cout << "(" << next.first.first << "," << next.first.second << "): ";
-		std::cout << m_x.substr(0, next.first.first + 1) << "||" << m_y.substr(next.first.second + 1) << std::endl;
-		if (next.first == std::pair<int, int>(0, 0))
+		std::cout << "(" << next.m_parent.first << "," << next.m_parent.second << ")";
+		std::cout << m_x.substr(0, next.m_parent.first + 1) << "||" << m_y.substr(next.m_parent.second + 1) << std::endl;
+		if (next.m_parent == std::pair<int, int>(0, 0))
 		{
-			std::cout << "(" << m_table[std::pair<int, int>(0, 0)].first.first << "," << m_table[std::pair<int, int>(0, 0)].first.second << "): ";
+			std::cout << "(" << m_table[std::pair<int, int>(0, 0)].m_parent.first << "," << m_table[std::pair<int, int>(0, 0)].m_parent.second << "): ";
 			std::cout << "||" << m_y << std::endl;
 			break;
 		}
 	}
+}
+
+EditDistance::BackTrace::BackTrace(std::pair<int, int>& parent, double cost, std::string& operation) :
+	m_parent(parent),
+	m_cost(cost),
+	m_operation(operation)
+{
+}
+
+EditDistance::BackTrace::BackTrace()
+{
+}
+
+EditDistance::BackTrace::~BackTrace()
+{
 }
 
 LevenshteinDistance::LevenshteinDistance(std::string& x, std::string& y) :
