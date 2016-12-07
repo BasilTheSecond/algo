@@ -65,9 +65,7 @@ class EditDistance
 public:
 	EditDistance(std::string& x, std::string& y);
 	virtual ~EditDistance();
-	void mPrintPath();
 	void mPrintSteps();
-	double mGetDistance();
 
 protected:
 	void mComputeTable();
@@ -116,8 +114,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string x("#EXECUTION");
 	std::string y("#INTENTION");
 	LevenshteinDistance levenshteinDistance(x, y);
-	levenshteinDistance.mPrintPath();
-	std::cout << "Distance between: " << x << " and " << y << " : " << levenshteinDistance.mGetDistance() << std::endl;
+	std::cout << "Steps:" << std::endl;
 	levenshteinDistance.mPrintSteps();
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
@@ -164,44 +161,19 @@ void EditDistance::mComputeTable()
 	}
 }
 
-void EditDistance::mPrintPath()
-{
-	BackTrace root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
-	std::cout << "(" << m_x.size() - 1 << "," << m_y.size() - 1 << ")";
-	std::cout << "->";
-	for (BackTrace next = root; true; next = m_table[next.m_parent])
-	{
-		std::cout << "(" << next.m_parent.first << "," << next.m_parent.second << ")";
-		if (next.m_parent == std::pair<int, int>(0, 0))
-		{
-			std::cout << std::endl;
-			break;
-		}
-		else
-		{
-			std::cout << "->";
-		}
-	}
-}
-
-double EditDistance::mGetDistance()
-{
-	return  m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)].m_cost;
-}
-
 void EditDistance::mPrintSteps()
 {
 	BackTrace root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
 	std::cout << "(" << (m_x.size() - 1) << "," << (m_y.size() - 1) << "): ";
-	std::cout << m_x << "||" << std::endl;
+	std::cout << m_x << "-" << std::endl;
 	for (BackTrace next = root; true; next = m_table[std::pair<int, int>(next.m_parent)])
 	{
 		std::cout << "(" << next.m_parent.first << "," << next.m_parent.second << "): ";
-		std::cout << m_x.substr(0, next.m_parent.first + 1) << "||" << m_y.substr(next.m_parent.second + 1) << " " << next.m_operation << std::endl;
+		std::cout << m_x.substr(0, next.m_parent.first + 1) << "-" << m_y.substr(next.m_parent.second + 1) << " " << next.m_operation << "(" << next.m_cost << ")" << std::endl;
 		if (next.m_parent == std::pair<int, int>(0, 0))
 		{
-			std::cout << "(" << m_table[std::pair<int, int>(0, 0)].m_parent.first << "," << m_table[std::pair<int, int>(0, 0)].m_parent.second << "): ";
-			std::cout << "||" << m_y << " " << next.m_operation << std::endl;
+			std::cout << "(" << m_table[next.m_parent].m_parent.first << "," << m_table[next.m_parent].m_parent.second << "): ";
+			std::cout << "-" << m_y << " " << m_table[next.m_parent].m_operation << "(" << m_table[next.m_parent].m_cost << ")" << std::endl;
 			break;
 		}
 	}
