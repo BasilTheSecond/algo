@@ -11,11 +11,12 @@ public:
 	{
 	public:
 		Value();
+		Value(std::pair<int, int>& parent, double value);
 		~Value();
 
 	public:
 		std::pair<int, int> m_parent;
-		std::pair<int, int> m_value;
+		double m_value;
 	};
 
 	class Item
@@ -56,6 +57,10 @@ KnapSack::KnapSack(std::vector<Item>& items, int size) :
 m_items(items),
 m_size(size)
 {
+	for (int j = 0; j <= m_size; j++)
+	{
+		m_values[std::pair<int, int>(0, j)] = Value(std::pair<int, int>(0, 0), 0);
+	}
 }
 
 KnapSack::~KnapSack()
@@ -63,6 +68,12 @@ KnapSack::~KnapSack()
 }
 
 KnapSack::Value::Value()
+{
+}
+
+KnapSack::Value::Value(std::pair<int, int>& parent, double value) :
+m_parent(parent),
+m_value(value)
 {
 }
 
