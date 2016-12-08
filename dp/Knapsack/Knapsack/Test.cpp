@@ -50,9 +50,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	items1.push_back(KnapSack::Item(std::string("sandwich"), 4, 4));
 	KnapSack knapSack1(items1, 5);
 	std::vector<KnapSack::Item> items2;
-	items2.push_back(KnapSack::Item(std::string("gold watch"), 10, 3));
-	items2.push_back(KnapSack::Item(std::string("box of matches"), 1, 5));
-	items2.push_back(KnapSack::Item(std::string("sandwich"), 4, 4));
+	items2.push_back(KnapSack::Item(std::string("golden statue"), 10, 4));
+	items2.push_back(KnapSack::Item(std::string("crystal ball"), 4, 2));
+	items2.push_back(KnapSack::Item(std::string("fountain pen"), 7,  3));
 	KnapSack knapSack2(items2, 5);
 	std::cout << "Press any key to exit..." << std::endl;
 	getchar();
