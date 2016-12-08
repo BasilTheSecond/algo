@@ -44,11 +44,16 @@ private:
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	std::vector<KnapSack::Item> items;
-	items.push_back(KnapSack::Item(std::string("gold watch"), 10, 3));
-	items.push_back(KnapSack::Item(std::string("box of matches"), 1, 5));
-	items.push_back(KnapSack::Item(std::string("sandwich"), 4, 4));
-	KnapSack knapSack(items, 5);
+	std::vector<KnapSack::Item> items1;
+	items1.push_back(KnapSack::Item(std::string("gold watch"), 10, 3));
+	items1.push_back(KnapSack::Item(std::string("box of matches"), 1, 5));
+	items1.push_back(KnapSack::Item(std::string("sandwich"), 4, 4));
+	KnapSack knapSack1(items1, 5);
+	std::vector<KnapSack::Item> items2;
+	items2.push_back(KnapSack::Item(std::string("gold watch"), 10, 3));
+	items2.push_back(KnapSack::Item(std::string("box of matches"), 1, 5));
+	items2.push_back(KnapSack::Item(std::string("sandwich"), 4, 4));
+	KnapSack knapSack2(items2, 5);
 	std::cout << "Press any key to exit..." << std::endl;
 	getchar();
 	return 0;
