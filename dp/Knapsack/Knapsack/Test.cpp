@@ -35,11 +35,13 @@ public:
 public:
 	KnapSack(std::vector<Item>& items, int size);
 	~KnapSack();
+	void mGetResult(std::vector<Item>& result);
 
 private:
 	std::map<std::pair<int, int>, Value> m_values;
-	std::vector<Item>& m_items;
+	std::vector<Item> m_items;
 	int m_size;
+	std::vector<Item> m_result;
 };
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -85,10 +87,31 @@ m_size(size)
 			m_values[std::pair<int, int>(i, j)] = values[0];
 		}
 	}
+	m_result.clear();
+	for (std::pair<int, int> current = std::pair<int, int>(0, m_size); true; current = m_values[current].m_parent)
+	{
+		if (m_values[current].m_parent == std::pair<int, int>(-1, -1))
+		{
+			if (m_values[current].m_value > 0)
+			{
+				m_result.push_back(m_items[current.first]);
+			}
+			break;
+		}
+		if (m_values[current].m_value > m_values[m_values[current].m_parent].m_value)
+		{
+			m_result.push_back(m_items[current.first]);
+		}
+	}
 }
 
 KnapSack::~KnapSack()
 {
+}
+
+void KnapSack::mGetResult(std::vector<Item>& result)
+{
+	result = m_result;
 }
 
 KnapSack::Value::Value()
