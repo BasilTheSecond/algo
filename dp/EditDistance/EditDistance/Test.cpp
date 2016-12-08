@@ -66,10 +66,10 @@ class EditDistance
 public:
 	EditDistance(std::string& x, std::string& y);
 	virtual ~EditDistance();
-	void mPrintSteps();
 
 protected:
 	void mComputeTable();
+	void mTraceBack();
 
 protected:
 	std::string m_x;
@@ -96,6 +96,7 @@ private:
 
 private:
 	std::map<std::pair<int, int>, Cost> m_table; // table with back-trace
+	std::vector<Cost> m_traceBack;
 };
 
 class LevenshteinDistance : public EditDistance
@@ -127,28 +128,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string x0("#hello");
 	std::string y0("#soo");
 	LevenshteinDistance levenshteinDistance0(x0, y0);
-	std::cout << "Steps:" << std::endl;
-	levenshteinDistance0.mPrintSteps();
 	//std::string x1("#EXECUTION");
 	//std::string y1("#INTENTION");
 	//LevenshteinDistance levenshteinDistance1(x1, y1);
 	//std::cout << "Steps:" << std::endl;
-	//levenshteinDistance1.mPrintSteps();
 	//std::string x2("#HELLO,WORLD");
 	//std::string y2("#BLAH,BLAH");
 	//LevenshteinDistance levenshteinDistance2(x2, y2);
 	//std::cout << "Steps:" << std::endl;
-	//levenshteinDistance2.mPrintSteps();
 	//std::string x3("#AGGCTATCACCTGACCTCCAGGCCGATGCCC");
 	//std::string y3("#TAGCTATCACGACCGCGGTCGATTTGCCCGAC");
 	//LevenshteinDistance levenshteinDistance3(x3, y3);
 	//std::cout << "Steps:" << std::endl;
-	//levenshteinDistance3.mPrintSteps();
 	//std::string x4("#HIEROGLYPHOLOGY");
 	//std::string y4("#MICHAELANGELO");
 	//LongestCommonSubsequence longestCommonSubsequence4(x4, y4);
 	//std::cout << "Steps:" << std::endl;
-	//longestCommonSubsequence4.mPrintSteps();
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
@@ -201,21 +196,11 @@ void EditDistance::mComputeTable()
 	}
 }
 
-void EditDistance::mPrintSteps()
+void EditDistance::mTraceBack()
 {
-	Cost root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
-	std::cout << "(" << (m_x.size() - 1) << "," << (m_y.size() - 1) << "): ";
-	std::cout << m_x << "-" << std::endl;
-	for (Cost next = root; true; next = m_table[std::pair<int, int>(next.m_parent)])
+	for (Cost current = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)]; current.m_parent != std::pair<int, int>(-1, -1); current = m_table[current.m_parent])
 	{
-		std::cout << "(" << next.m_parent.first << "," << next.m_parent.second << "): ";
-		std::cout << m_x.substr(0, next.m_parent.first + 1) << "-" << m_y.substr(next.m_parent.second + 1) << " " << next.m_operation << "(" << next.m_cost << ")" << std::endl;
-		if (next.m_parent == std::pair<int, int>(0, 0))
-		{
-			std::cout << "(" << m_table[next.m_parent].m_parent.first << "," << m_table[next.m_parent].m_parent.second << "): ";
-			std::cout << "-" << m_y << " " << m_table[next.m_parent].m_operation << "(" << m_table[next.m_parent].m_cost << ")" << std::endl;
-			break;
-		}
+		m_traceBack.push_back(current);
 	}
 }
 
@@ -238,6 +223,7 @@ LevenshteinDistance::LevenshteinDistance(std::string& x, std::string& y) :
 	EditDistance(x, y)
 {
 	mComputeTable();
+	mTraceBack();
 }
 
 LevenshteinDistance::~LevenshteinDistance()
@@ -262,6 +248,7 @@ LongestCommonSubsequence::LongestCommonSubsequence(std::string& x, std::string& 
 EditDistance(x, y)
 {
 	mComputeTable();
+	mTraceBack();
 }
 
 LongestCommonSubsequence::~LongestCommonSubsequence()
