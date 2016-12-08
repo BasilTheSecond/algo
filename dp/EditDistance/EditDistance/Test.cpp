@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <limits>
 
 // Explanations of insertion, deletion and substitution steps:
 // Elements in the edit step table represent x in the various stages of transformation
@@ -109,6 +110,18 @@ private:
 	virtual double mSubstitutionCost(int i, int j);
 };
 
+class LongestCommonSubsequence : public EditDistance
+{
+public:
+	LongestCommonSubsequence(std::string& x, std::string& y);
+	virtual ~LongestCommonSubsequence();
+
+private:
+	virtual double mInsertionCost(int i, int j);
+	virtual double mDeletionCost(int i, int j);
+	virtual double mSubstitutionCost(int i, int j);
+};
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	std::string x1("#EXECUTION");
@@ -121,6 +134,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	LevenshteinDistance levenshteinDistance2(x2, y2);
 	std::cout << "Steps:" << std::endl;
 	levenshteinDistance2.mPrintSteps();
+	std::string x3("AGGCTATCACCTGACCTCCAGGCCGATGCCC");
+	std::string y3("TAGCTATCACGACCGCGGTCGATTTGCCCGAC");
+	LevenshteinDistance levenshteinDistance3(x3, y3);
+	std::cout << "Steps:" << std::endl;
+	levenshteinDistance3.mPrintSteps();
+	std::string x4("HIEROGLYPHOLOGY");
+	std::string y4("MICHAELANGELO");
+	LongestCommonSubsequence longestCommonSubsequence4(x4, y4);
+	std::cout << "Steps:" << std::endl;
+	longestCommonSubsequence4.mPrintSteps();
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
@@ -219,4 +242,28 @@ double LevenshteinDistance::mDeletionCost(int i, int j)
 double LevenshteinDistance::mSubstitutionCost(int i, int j)
 {
 	return (m_x[i] == m_y[j]) ? 0 : 2;
+}
+
+LongestCommonSubsequence::LongestCommonSubsequence(std::string& x, std::string& y) :
+EditDistance(x, y)
+{
+	mComputeTable();
+}
+
+LongestCommonSubsequence::~LongestCommonSubsequence()
+{
+}
+
+double LongestCommonSubsequence::mInsertionCost(int i, int j)
+{
+	return 1;
+}
+
+double LongestCommonSubsequence::mDeletionCost(int i, int j)
+{
+	return 1;
+}
+double LongestCommonSubsequence::mSubstitutionCost(int i, int j)
+{
+	return (m_x[i] == m_y[j]) ? 0 : std::numeric_limits<double>::max();
 }
