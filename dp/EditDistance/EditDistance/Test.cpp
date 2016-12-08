@@ -155,13 +155,11 @@ void EditDistance::mComputeTable()
 			costs.push_back(BackTrace(std::pair<int, int>(i - 1, j - 1), m_table[std::pair<int, int>(i - 1, j - 1)].m_cost + mSubstitutionCost(i, j), std::string("substitute")));
 			costs.push_back(BackTrace(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].m_cost + mDeletionCost(i, j), std::string("delete")));
 			costs.push_back(BackTrace(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].m_cost + mInsertionCost(i, j), std::string("insert")));
-			std::sort(costs.begin(),
-								costs.end(),
-								[](BackTrace& a, BackTrace& b)
-								{
-									return a.m_cost != b.m_cost ? a.m_cost < b.m_cost : a.m_cost < b.m_cost;
-								});
-			m_table[std::pair<int, int>(i, j)] = costs[0];
+			m_table[std::pair<int, int>(i, j)] = *std::min_element(costs.begin(),	costs.end(), 
+				[](BackTrace& a, BackTrace& b)
+				{
+					return a.m_cost < b.m_cost;
+				});
 		}
 	}
 }
