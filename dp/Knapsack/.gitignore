@@ -1,0 +1,6 @@
+*.sdf
+*.suo
+*.opensdf
+Knapsack/Debug/
+/Debug/
+/ipch/
