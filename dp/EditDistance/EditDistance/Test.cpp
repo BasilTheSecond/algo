@@ -64,8 +64,24 @@
 class EditDistance
 {
 public:
+	class Cost
+	{
+	public:
+		Cost();
+		Cost(std::pair<int, int>& parent, double cost, std::string& operation);
+		~Cost();
+
+	public:
+		std::pair<int, int> m_parent;
+		double m_cost;
+		std::string m_operation;
+	};
+
+public:
 	EditDistance(std::string& x, std::string& y);
 	virtual ~EditDistance();
+	void mPrint();
+	const std::vector<Cost>& mGetTraceBack();
 
 protected:
 	void mComputeTable();
@@ -79,20 +95,6 @@ private:
 	virtual double mInsertionCost(int i, int j) = 0;
 	virtual double mDeletionCost(int i, int j) = 0;
 	virtual double mSubstitutionCost(int i, int j) = 0;
-
-private:
-	class Cost
-	{
-	public:
-		Cost();
-		Cost(std::pair<int, int>& parent, double cost, std::string& operation);
-		~Cost();
-
-	public:
-		std::pair<int, int> m_parent;
-		double m_cost;
-		std::string m_operation;
-	};
 
 private:
 	std::map<std::pair<int, int>, Cost> m_table; // table with back-trace
@@ -128,6 +130,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string x0("#hello");
 	std::string y0("#soo");
 	LevenshteinDistance levenshteinDistance0(x0, y0);
+	levenshteinDistance0.mPrint();
 	//std::string x1("#EXECUTION");
 	//std::string y1("#INTENTION");
 	//LevenshteinDistance levenshteinDistance1(x1, y1);
@@ -202,6 +205,41 @@ void EditDistance::mTraceBack()
 	{
 		m_traceBack.push_back(current);
 	}
+}
+
+void EditDistance::mPrint()
+{
+	std::string x = m_x;
+	int k = 0;
+	for (size_t i = m_traceBack.size() - 1; i >= 0; i--)
+	{
+		std::cout << x;
+		if (m_traceBack[i].m_operation == std::string("delete"))
+		{
+			char cx = m_x.at(m_traceBack[i].m_parent.first);
+			std::cout << std::string(" delete") << " " << cx << std::endl;
+			x.erase(k, 1);
+		}
+		else if (m_traceBack[i].m_operation == std::string("insert"))
+		{
+			char cy = m_y.at(m_traceBack[i].m_parent.second);
+			std::cout << std::string(" insert") << " " << cy << std::endl;
+			x.insert(k, 1, cy);
+		}
+		else if (m_traceBack[i].m_operation == std::string("substitute"))
+		{
+			char cx = m_x.at(m_traceBack[i].m_parent.first);
+			char cy = m_y.at(m_traceBack[i].m_parent.second);
+			std::cout << std::string(" substitute") << " " << cx << " with " << cy << std::endl;
+			x.at(k) = cy;
+			k++;
+		}
+	}
+}
+
+const std::vector<EditDistance::Cost>& EditDistance::mGetTraceBack()
+{
+	return m_traceBack;
 }
 
 EditDistance::Cost::Cost(std::pair<int, int>& parent, double cost, std::string& operation) :
