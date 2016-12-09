@@ -68,7 +68,7 @@ public:
 	{
 	public:
 		Cost();
-		Cost(std::pair<int, int>& parent, double cost, std::string& operation);
+		Cost(std::pair<int, int>& parent, double cost, const std::string& operation);
 		~Cost();
 
 	public:
@@ -88,6 +88,12 @@ public:
 		std::pair<int, int> m_position;
 		std::string m_operation;
 		double m_cost;
+
+	public:
+		static const std::string k_delete;
+		static const std::string k_insert;
+		static const std::string k_substitute;
+		static const std::string k_nop;
 	};
 
 public:
@@ -138,6 +144,11 @@ private:
 	virtual double mSubstitutionCost(int i, int j);
 };
 
+const std::string EditDistance::Operation::k_delete(std::string("delete"));
+const std::string EditDistance::Operation::k_insert(std::string("insert"));
+const std::string EditDistance::Operation::k_substitute(std::string("substitute"));
+const std::string EditDistance::Operation::k_nop(std::string("nop"));
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	std::string x0("#hello");
@@ -185,9 +196,9 @@ void EditDistance::mComputeTable()
 			Cost minCost;
 			if (i - 1 >= 0 && j - 1 >= 0)
 			{
-				costs.push_back(Cost(std::pair<int, int>(i - 1, j - 1), m_table[std::pair<int, int>(i - 1, j - 1)].m_cost + mSubstitutionCost(i, j), std::string("substitute")));
-				costs.push_back(Cost(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].m_cost + mDeletionCost(i, j), std::string("delete")));
-				costs.push_back(Cost(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].m_cost + mInsertionCost(i, j), std::string("insert")));
+				costs.push_back(Cost(std::pair<int, int>(i - 1, j - 1), m_table[std::pair<int, int>(i - 1, j - 1)].m_cost + mSubstitutionCost(i, j), Operation::k_substitute));
+				costs.push_back(Cost(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].m_cost + mDeletionCost(i, j), Operation::k_delete));
+				costs.push_back(Cost(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].m_cost + mInsertionCost(i, j), Operation::k_insert));
 				auto lambdaMin = [](Cost& a, Cost& b)
 				{
 					return a.m_cost < b.m_cost;
@@ -197,15 +208,15 @@ void EditDistance::mComputeTable()
 			}
 			else if (i == 0 && j - 1 >= 0)
 			{
-				minCost = Cost(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].m_cost + mInsertionCost(i, j), std::string("insert"));
+				minCost = Cost(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].m_cost + mInsertionCost(i, j), Operation::k_insert);
 			}
 			else if (i - 1 >= 0 && j == 0)
 			{
-				minCost = Cost(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].m_cost + mDeletionCost(i, j), std::string("delete"));
+				minCost = Cost(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].m_cost + mDeletionCost(i, j), Operation::k_delete);
 			}
 			else // i == 0 && j == 0
 			{
-				minCost = Cost(std::pair<int, int>(-1, -1), 0, std::string(""));
+				minCost = Cost(std::pair<int, int>(-1, -1), 0, Operation::k_nop);
 			}
 			m_table[std::pair<int, int>(i, j)] = minCost;
 		}
@@ -229,27 +240,28 @@ void EditDistance::mPrint()
 		char cx = m_x.at(operation.m_position.first);
 		char cy = m_y.at(operation.m_position.second);
 		std::cout << x << " " << operation.m_operation;
-		if (operation.m_operation == std::string("delete"))
+		if (operation.m_operation == Operation::k_delete)
 		{
-			std::cout << " " << cx << std::endl;
+			std::cout << " " << cx << " " << "cost: " << operation.m_cost << std::endl;
 			x.erase(k, 1);
 		}
-		else if (operation.m_operation == std::string("insert"))
+		else if (operation.m_operation == Operation::k_insert)
 		{
-			std::cout << " " << cy << std::endl;
+			std::cout << " " << cy << " " << "cost: " << operation.m_cost << std::endl;
 			x.insert(k, 1, cy);
 		}
-		else if (operation.m_operation == std::string("substitute"))
+		else if (operation.m_operation == Operation::k_substitute)
 		{
-			std::cout << " " << cx << " with " << cy << std::endl;
+			std::cout << " " << cx << " with " << cy << " " << "cost: " << operation.m_cost << std::endl;
 			x.at(k++) = cy;
 		}
-		else
+		else if (operation.m_operation == Operation::k_nop)
 		{
-			std::cout << std::endl;
+			std::cout << " " << "cost: " << operation.m_cost << std::endl;
 			k++;
 		}
 	}
+	std::cout << x << std::endl;
 }
 
 const std::vector<EditDistance::Operation>& EditDistance::mGetBackTrace()
@@ -257,7 +269,7 @@ const std::vector<EditDistance::Operation>& EditDistance::mGetBackTrace()
 	return m_backTrace;
 }
 
-EditDistance::Cost::Cost(std::pair<int, int>& parent, double cost, std::string& operation) :
+EditDistance::Cost::Cost(std::pair<int, int>& parent, double cost, const std::string& operation) :
 m_parent(parent),
 m_cost(cost),
 m_operation(operation)
