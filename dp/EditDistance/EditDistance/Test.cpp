@@ -115,12 +115,13 @@ public:
 	EditDistance(std::string& x, std::string& y);
 	virtual ~EditDistance();
 	void mPrintBackTraceOperations();
-	void mGetBackTraceOperations();
+	const std::vector<BackTraceOperation>& mGetBackTraceOperations();
 	const std::vector<Operation>& mGetBackTrace();
 
 protected:
 	void mCreateTable();
 	void mCreateBackTrace();
+	void mCreateBackTraceOperations();
 
 protected:
 	std::string m_x;
@@ -134,6 +135,7 @@ private:
 private:
 	std::map<std::pair<int, int>, Cost> m_table; // table with back-trace
 	std::vector<Operation> m_backTrace;
+	std::vector<BackTraceOperation> m_backTraceOperations;
 };
 
 class LevenshteinDistance : public EditDistance
@@ -252,6 +254,11 @@ void EditDistance::mCreateBackTrace()
 	}
 }
 
+void EditDistance::mCreateBackTraceOperations()
+{
+
+}
+
 void EditDistance::mPrintBackTraceOperations()
 {
 	std::string x = m_x;
@@ -290,6 +297,11 @@ const std::vector<EditDistance::Operation>& EditDistance::mGetBackTrace()
 	return m_backTrace;
 }
 
+const std::vector<EditDistance::BackTraceOperation>& EditDistance::mGetBackTraceOperations()
+{
+	return m_backTraceOperations;
+}
+
 EditDistance::Cost::Cost(std::pair<int, int>& parent, double cost, const std::string& operation) :
 m_parent(parent),
 m_cost(cost),
@@ -317,6 +329,23 @@ m_cost(cost)
 }
 
 EditDistance::Operation::~Operation()
+{
+}
+
+EditDistance::BackTraceOperation::BackTraceOperation()
+{
+}
+
+EditDistance::BackTraceOperation::BackTraceOperation(const std::string& x, char operandx, char operandy, const std::string& operation, double cost) :
+m_x(x),
+m_operandx(operandx),
+m_operandy(operandy),
+m_operation(operation),
+m_cost()
+{
+}
+
+EditDistance::BackTraceOperation::~BackTraceOperation()
 {
 }
 
