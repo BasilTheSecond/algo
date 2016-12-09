@@ -155,10 +155,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string y0("#soo");
 	LevenshteinDistance levenshteinDistance0(x0, y0);
 	levenshteinDistance0.mPrint();
-	//std::string x1("#EXECUTION");
-	//std::string y1("#INTENTION");
-	//LevenshteinDistance levenshteinDistance1(x1, y1);
-	//std::cout << "Steps:" << std::endl;
+	std::string x1("#EXECUTION");
+	std::string y1("#INTENTION");
+	LevenshteinDistance levenshteinDistance1(x1, y1);
+	levenshteinDistance1.mPrint();
 	//std::string x2("#HELLO,WORLD");
 	//std::string y2("#BLAH,BLAH");
 	//LevenshteinDistance levenshteinDistance2(x2, y2);
@@ -248,7 +248,7 @@ void EditDistance::mPrint()
 		else if (operation.m_operation == Operation::k_insert)
 		{
 			std::cout << " " << cy << " " << "cost: " << operation.m_cost << std::endl;
-			x.insert(k, 1, cy);
+			x.insert(k++, 1, cy);
 		}
 		else if (operation.m_operation == Operation::k_substitute)
 		{
