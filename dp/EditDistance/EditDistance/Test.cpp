@@ -96,10 +96,26 @@ public:
 		static const std::string k_nop;
 	};
 
+	class BackTraceOperation
+	{
+	public:
+		BackTraceOperation();
+		BackTraceOperation(const std::string& x, char operandx, char operandy, const std::string& operation, double cost);
+		~BackTraceOperation();
+
+	public:
+		std::string m_x;
+		char m_operandx;
+		char m_operandy;
+		std::string m_operation;
+		double m_cost;
+	};
+
 public:
 	EditDistance(std::string& x, std::string& y);
 	virtual ~EditDistance();
-	void mPrint();
+	void mPrintBackTraceOperations();
+	void mGetBackTraceOperations();
 	const std::vector<Operation>& mGetBackTrace();
 
 protected:
@@ -137,6 +153,7 @@ class LongestCommonSubsequence : public EditDistance
 public:
 	LongestCommonSubsequence(std::string& x, std::string& y);
 	virtual ~LongestCommonSubsequence();
+	void mGetLongestCommonSubsequence();
 
 private:
 	virtual double mInsertionCost(int i, int j);
@@ -154,23 +171,27 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string x0("#hello");
 	std::string y0("#soo");
 	LevenshteinDistance levenshteinDistance0(x0, y0);
-	levenshteinDistance0.mPrint();
+	levenshteinDistance0.mPrintBackTraceOperations();
 	std::string x1("#EXECUTION");
 	std::string y1("#INTENTION");
 	LevenshteinDistance levenshteinDistance1(x1, y1);
-	levenshteinDistance1.mPrint();
+	levenshteinDistance1.mPrintBackTraceOperations();
 	std::string x2("#HELLO,WORLD");
 	std::string y2("#BLAH,BLAH");
 	LevenshteinDistance levenshteinDistance2(x2, y2);
-	levenshteinDistance2.mPrint();
-	//std::string x3("#AGGCTATCACCTGACCTCCAGGCCGATGCCC");
-	//std::string y3("#TAGCTATCACGACCGCGGTCGATTTGCCCGAC");
-	//LevenshteinDistance levenshteinDistance3(x3, y3);
-	//std::cout << "Steps:" << std::endl;
-	//std::string x4("#HIEROGLYPHOLOGY");
-	//std::string y4("#MICHAELANGELO");
-	//LongestCommonSubsequence longestCommonSubsequence4(x4, y4);
-	//std::cout << "Steps:" << std::endl;
+	levenshteinDistance2.mPrintBackTraceOperations();
+	std::string x3("#AGGCTATCACCTGACCTCCAGGCCGATGCCC");
+	std::string y3("#TAGCTATCACGACCGCGGTCGATTTGCCCGAC");
+	LevenshteinDistance levenshteinDistance3(x3, y3);
+	levenshteinDistance3.mPrintBackTraceOperations();
+	std::string x4("#HIEROGLYPHOLOGY");
+	std::string y4("#MICHAELANGELO");
+	LongestCommonSubsequence longestCommonSubsequence4(x4, y4);
+	longestCommonSubsequence4.mPrintBackTraceOperations();
+	std::string x5("#MICHAELANGELO");
+	std::string y5("#HIEROGLYPHOLOGY");
+	LongestCommonSubsequence longestCommonSubsequence5(x5, y5);
+	longestCommonSubsequence5.mPrintBackTraceOperations();
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
@@ -231,7 +252,7 @@ void EditDistance::mBackTrace()
 	}
 }
 
-void EditDistance::mPrint()
+void EditDistance::mPrintBackTraceOperations()
 {
 	std::string x = m_x;
 	for (size_t i = 0, k = 0; i < m_backTrace.size(); i++)
