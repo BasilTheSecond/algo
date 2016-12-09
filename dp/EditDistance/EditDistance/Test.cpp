@@ -77,15 +77,28 @@ public:
 		std::string m_operation;
 	};
 
+	class Operation
+	{
+	public:
+		Operation();
+		Operation(std::pair<int, int>& position, std::string& operation, double cost);
+		~Operation();
+
+	public:
+		std::pair<int, int> m_position;
+		std::string m_operation;
+		double m_cost;
+	};
+
 public:
 	EditDistance(std::string& x, std::string& y);
 	virtual ~EditDistance();
 	void mPrint();
-	const std::vector<Cost>& mGetTraceBack();
+	const std::vector<Operation>& mGetBackTrace();
 
 protected:
 	void mComputeTable();
-	void mTraceBack();
+	void mBackTrace();
 
 protected:
 	std::string m_x;
@@ -98,7 +111,7 @@ private:
 
 private:
 	std::map<std::pair<int, int>, Cost> m_table; // table with back-trace
-	std::vector<Cost> m_traceBack;
+	std::vector<Operation> m_backTrace;
 };
 
 class LevenshteinDistance : public EditDistance
@@ -199,47 +212,49 @@ void EditDistance::mComputeTable()
 	}
 }
 
-void EditDistance::mTraceBack()
+void EditDistance::mBackTrace()
 {
-	for (Cost current = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)]; current.m_parent != std::pair<int, int>(-1, -1); current = m_table[current.m_parent])
+	for (std::pair<int, int> position = std::pair<int, int>(m_x.size() - 1, m_y.size() - 1); position != std::pair<int, int>(-1, -1); position = m_table[position].m_parent)
 	{
-		m_traceBack.push_back(current);
+		m_backTrace.push_back(Operation(position, m_table[position].m_operation, m_table[position].m_cost));
 	}
 }
 
 void EditDistance::mPrint()
 {
 	std::string x = m_x;
-	int k = 0;
-	for (size_t i = m_traceBack.size() - 1; i >= 0; i--)
+	for (size_t i = 0, k = 0; i < m_backTrace.size(); i++)
 	{
-		std::cout << x;
-		if (m_traceBack[i].m_operation == std::string("delete"))
+		Operation operation = m_backTrace[m_backTrace.size() - 1 - i];
+		char cx = m_x.at(operation.m_position.first);
+		char cy = m_y.at(operation.m_position.second);
+		std::cout << x << " " << operation.m_operation;
+		if (operation.m_operation == std::string("delete"))
 		{
-			char cx = m_x.at(m_traceBack[i].m_parent.first);
-			std::cout << std::string(" delete") << " " << cx << std::endl;
+			std::cout << " " << cx << std::endl;
 			x.erase(k, 1);
 		}
-		else if (m_traceBack[i].m_operation == std::string("insert"))
+		else if (operation.m_operation == std::string("insert"))
 		{
-			char cy = m_y.at(m_traceBack[i].m_parent.second);
-			std::cout << std::string(" insert") << " " << cy << std::endl;
+			std::cout << " " << cy << std::endl;
 			x.insert(k, 1, cy);
 		}
-		else if (m_traceBack[i].m_operation == std::string("substitute"))
+		else if (operation.m_operation == std::string("substitute"))
 		{
-			char cx = m_x.at(m_traceBack[i].m_parent.first);
-			char cy = m_y.at(m_traceBack[i].m_parent.second);
-			std::cout << std::string(" substitute") << " " << cx << " with " << cy << std::endl;
-			x.at(k) = cy;
+			std::cout << " " << cx << " with " << cy << std::endl;
+			x.at(k++) = cy;
+		}
+		else
+		{
+			std::cout << std::endl;
 			k++;
 		}
 	}
 }
 
-const std::vector<EditDistance::Cost>& EditDistance::mGetTraceBack()
+const std::vector<EditDistance::Operation>& EditDistance::mGetBackTrace()
 {
-	return m_traceBack;
+	return m_backTrace;
 }
 
 EditDistance::Cost::Cost(std::pair<int, int>& parent, double cost, std::string& operation) :
@@ -257,11 +272,26 @@ EditDistance::Cost::~Cost()
 {
 }
 
+EditDistance::Operation::Operation()
+{
+}
+
+EditDistance::Operation::Operation(std::pair<int, int>& position, std::string& operation, double cost) :
+m_position(position),
+m_operation(operation),
+m_cost(cost)
+{
+}
+
+EditDistance::Operation::~Operation()
+{
+}
+
 LevenshteinDistance::LevenshteinDistance(std::string& x, std::string& y) :
 	EditDistance(x, y)
 {
 	mComputeTable();
-	mTraceBack();
+	mBackTrace();
 }
 
 LevenshteinDistance::~LevenshteinDistance()
@@ -286,7 +316,7 @@ LongestCommonSubsequence::LongestCommonSubsequence(std::string& x, std::string& 
 EditDistance(x, y)
 {
 	mComputeTable();
-	mTraceBack();
+	mBackTrace();
 }
 
 LongestCommonSubsequence::~LongestCommonSubsequence()
