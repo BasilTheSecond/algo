@@ -263,69 +263,48 @@ void EditDistance::mCreateBackTraceOperations()
 		char cx = m_x.at(operation.m_position.first);
 		char cy = m_y.at(operation.m_position.second);
 		m_backTraceOperations.push_back(BackTraceOperation(x, cx, cy, operation.m_operation, operation.m_cost));
-		//std::cout << x << " " << operation.m_operation;
 		if (operation.m_operation == Operation::k_delete)
 		{
-			//std::cout << " " << cx << " " << "cost: " << operation.m_cost << std::endl;
 			x.erase(k, 1);
 		}
 		else if (operation.m_operation == Operation::k_insert)
 		{
-			//std::cout << " " << cy << " " << "cost: " << operation.m_cost << std::endl;
 			x.insert(k++, 1, cy);
 		}
 		else if (operation.m_operation == Operation::k_substitute)
 		{
-			//std::cout << " " << cx << " with " << cy << " " << "cost: " << operation.m_cost << std::endl;
 			x.at(k++) = cy;
 		}
 		else if (operation.m_operation == Operation::k_nop)
 		{
-			//std::cout << " " << "cost: " << operation.m_cost << std::endl;
 			k++;
 		}
 	}
 	m_backTraceOperations.push_back(BackTraceOperation(x, -1, -1, Operation::k_nop, 0));
-	//std::cout << x << std::endl;
 }
 
 void EditDistance::mPrintBackTraceOperations()
 {
-	//std::string x = m_x;
 	for (size_t i = 0; i < m_backTraceOperations.size(); i++)
 	{
-		//Operation operation = m_backTrace[m_backTrace.size() - 1 - i];
-		//char cx = m_x.at(operation.m_position.first);
-		//char cy = m_y.at(operation.m_position.second);
-		//m_backTraceOperations.push_back(BackTraceOperation(x, cx, cy, operation.m_operation, operation.m_cost));
-		//std::cout << x << " " << operation.m_operation;
 		std::cout << m_backTraceOperations[i].m_x;
 		if (m_backTraceOperations[i].m_operation == Operation::k_delete)
 		{
-			//std::cout << " " << cx << " " << "cost: " << operation.m_cost << std::endl;
 			std::cout << " " << m_backTraceOperations[i].m_operation << " " << m_backTraceOperations[i].m_cx << " " << "cost: " << m_backTraceOperations[i].m_cost << std::endl;
-			//x.erase(k, 1);
 		}
 		else if (m_backTraceOperations[i].m_operation == Operation::k_insert)
 		{
-			//std::cout << " " << cy << " " << "cost: " << operation.m_cost << std::endl;
 			std::cout << " " << m_backTraceOperations[i].m_operation << " " << m_backTraceOperations[i].m_cy << " " << "cost: " << m_backTraceOperations[i].m_cost << std::endl;
-			//x.insert(k++, 1, cy);
 		}
 		else if (m_backTraceOperations[i].m_operation == Operation::k_substitute)
 		{
-			//std::cout << " " << cx << " with " << cy << " " << "cost: " << operation.m_cost << std::endl;
 			std::cout << " " << m_backTraceOperations[i].m_operation << " " << m_backTraceOperations[i].m_cx << " with " << m_backTraceOperations[i].m_cy << " " << "cost: " << m_backTraceOperations[i].m_cost << std::endl;
-			//x.at(k++) = cy;
 		}
 		else if (m_backTraceOperations[i].m_operation == Operation::k_nop)
 		{
-			//std::cout << " " << "cost: " << operation.m_cost << std::endl;
-			//k++;
 			std::cout << std::endl;
 		}
 	}
-	//std::cout << x << std::endl;
 }
 
 const std::vector<EditDistance::Operation>& EditDistance::mGetBackTrace()
