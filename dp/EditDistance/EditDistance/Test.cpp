@@ -117,6 +117,7 @@ public:
 	void mPrintBackTraceOperations();
 	const std::vector<BackTraceOperation>& mGetBackTraceOperations();
 	const std::vector<Operation>& mGetBackTrace();
+	std::vector<std::string> mGetCommonSubstrings();
 
 protected:
 	void mCreateTable();
@@ -155,7 +156,7 @@ class LongestCommonSubsequence : public EditDistance
 public:
 	LongestCommonSubsequence(std::string& x, std::string& y);
 	virtual ~LongestCommonSubsequence();
-	void mGetLongestCommonSubsequence();
+	std::string mGetLongestCommonSubsequence();
 
 private:
 	virtual double mInsertionCost(int i, int j);
