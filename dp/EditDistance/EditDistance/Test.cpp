@@ -385,6 +385,7 @@ double LevenshteinDistance::mDeletionCost(int i, int j)
 {
 	return 1;
 }
+
 double LevenshteinDistance::mSubstitutionCost(int i, int j)
 {
 	return (m_x[i] == m_y[j]) ? 0 : 2;
