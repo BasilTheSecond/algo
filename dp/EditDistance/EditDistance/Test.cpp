@@ -119,8 +119,8 @@ public:
 	const std::vector<Operation>& mGetBackTrace();
 
 protected:
-	void mComputeTable();
-	void mBackTrace();
+	void mCreateTable();
+	void mCreateBackTrace();
 
 protected:
 	std::string m_x;
@@ -207,7 +207,7 @@ EditDistance::~EditDistance()
 {
 }
 
-void EditDistance::mComputeTable()
+void EditDistance::mCreateTable()
 {
 	for (int i = 0; i < static_cast<int>(m_x.size()); i++)
 	{
@@ -244,7 +244,7 @@ void EditDistance::mComputeTable()
 	}
 }
 
-void EditDistance::mBackTrace()
+void EditDistance::mCreateBackTrace()
 {
 	for (std::pair<int, int> position = std::pair<int, int>(m_x.size() - 1, m_y.size() - 1); position != std::pair<int, int>(-1, -1); position = m_table[position].m_parent)
 	{
@@ -323,8 +323,8 @@ EditDistance::Operation::~Operation()
 LevenshteinDistance::LevenshteinDistance(std::string& x, std::string& y) :
 	EditDistance(x, y)
 {
-	mComputeTable();
-	mBackTrace();
+	mCreateTable();
+	mCreateBackTrace();
 }
 
 LevenshteinDistance::~LevenshteinDistance()
@@ -348,8 +348,8 @@ double LevenshteinDistance::mSubstitutionCost(int i, int j)
 LongestCommonSubsequence::LongestCommonSubsequence(std::string& x, std::string& y) :
 EditDistance(x, y)
 {
-	mComputeTable();
-	mBackTrace();
+	mCreateTable();
+	mCreateBackTrace();
 }
 
 LongestCommonSubsequence::~LongestCommonSubsequence()
