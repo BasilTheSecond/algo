@@ -159,10 +159,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string y1("#INTENTION");
 	LevenshteinDistance levenshteinDistance1(x1, y1);
 	levenshteinDistance1.mPrint();
-	//std::string x2("#HELLO,WORLD");
-	//std::string y2("#BLAH,BLAH");
-	//LevenshteinDistance levenshteinDistance2(x2, y2);
-	//std::cout << "Steps:" << std::endl;
+	std::string x2("#HELLO,WORLD");
+	std::string y2("#BLAH,BLAH");
+	LevenshteinDistance levenshteinDistance2(x2, y2);
+	levenshteinDistance2.mPrint();
 	//std::string x3("#AGGCTATCACCTGACCTCCAGGCCGATGCCC");
 	//std::string y3("#TAGCTATCACGACCGCGGTCGATTTGCCCGAC");
 	//LevenshteinDistance levenshteinDistance3(x3, y3);
