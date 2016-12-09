@@ -100,13 +100,13 @@ public:
 	{
 	public:
 		BackTraceOperation();
-		BackTraceOperation(const std::string& x, char operandx, char operandy, const std::string& operation, double cost);
+		BackTraceOperation(const std::string& x, char cx, char cy, const std::string& operation, double cost);
 		~BackTraceOperation();
 
 	public:
 		std::string m_x;
-		char m_operandx;
-		char m_operandy;
+		char m_cx;
+		char m_cy;
 		std::string m_operation;
 		double m_cost;
 	};
@@ -256,40 +256,76 @@ void EditDistance::mCreateBackTrace()
 
 void EditDistance::mCreateBackTraceOperations()
 {
-
-}
-
-void EditDistance::mPrintBackTraceOperations()
-{
 	std::string x = m_x;
 	for (size_t i = 0, k = 0; i < m_backTrace.size(); i++)
 	{
 		Operation operation = m_backTrace[m_backTrace.size() - 1 - i];
 		char cx = m_x.at(operation.m_position.first);
 		char cy = m_y.at(operation.m_position.second);
-		std::cout << x << " " << operation.m_operation;
+		m_backTraceOperations.push_back(BackTraceOperation(x, cx, cy, operation.m_operation, operation.m_cost));
+		//std::cout << x << " " << operation.m_operation;
 		if (operation.m_operation == Operation::k_delete)
 		{
-			std::cout << " " << cx << " " << "cost: " << operation.m_cost << std::endl;
+			//std::cout << " " << cx << " " << "cost: " << operation.m_cost << std::endl;
 			x.erase(k, 1);
 		}
 		else if (operation.m_operation == Operation::k_insert)
 		{
-			std::cout << " " << cy << " " << "cost: " << operation.m_cost << std::endl;
+			//std::cout << " " << cy << " " << "cost: " << operation.m_cost << std::endl;
 			x.insert(k++, 1, cy);
 		}
 		else if (operation.m_operation == Operation::k_substitute)
 		{
-			std::cout << " " << cx << " with " << cy << " " << "cost: " << operation.m_cost << std::endl;
+			//std::cout << " " << cx << " with " << cy << " " << "cost: " << operation.m_cost << std::endl;
 			x.at(k++) = cy;
 		}
 		else if (operation.m_operation == Operation::k_nop)
 		{
-			std::cout << " " << "cost: " << operation.m_cost << std::endl;
+			//std::cout << " " << "cost: " << operation.m_cost << std::endl;
 			k++;
 		}
 	}
-	std::cout << x << std::endl;
+	m_backTraceOperations.push_back(BackTraceOperation(x, -1, -1, Operation::k_nop, 0));
+	//std::cout << x << std::endl;
+}
+
+void EditDistance::mPrintBackTraceOperations()
+{
+	//std::string x = m_x;
+	for (size_t i = 0; i < m_backTraceOperations.size(); i++)
+	{
+		//Operation operation = m_backTrace[m_backTrace.size() - 1 - i];
+		//char cx = m_x.at(operation.m_position.first);
+		//char cy = m_y.at(operation.m_position.second);
+		//m_backTraceOperations.push_back(BackTraceOperation(x, cx, cy, operation.m_operation, operation.m_cost));
+		//std::cout << x << " " << operation.m_operation;
+		std::cout << m_backTraceOperations[i].m_x;
+		if (m_backTraceOperations[i].m_operation == Operation::k_delete)
+		{
+			//std::cout << " " << cx << " " << "cost: " << operation.m_cost << std::endl;
+			std::cout << " " << m_backTraceOperations[i].m_operation << " " << m_backTraceOperations[i].m_cx << " " << "cost: " << m_backTraceOperations[i].m_cost << std::endl;
+			//x.erase(k, 1);
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_insert)
+		{
+			//std::cout << " " << cy << " " << "cost: " << operation.m_cost << std::endl;
+			std::cout << " " << m_backTraceOperations[i].m_operation << " " << m_backTraceOperations[i].m_cy << " " << "cost: " << m_backTraceOperations[i].m_cost << std::endl;
+			//x.insert(k++, 1, cy);
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_substitute)
+		{
+			//std::cout << " " << cx << " with " << cy << " " << "cost: " << operation.m_cost << std::endl;
+			std::cout << " " << m_backTraceOperations[i].m_operation << " " << m_backTraceOperations[i].m_cx << " with " << m_backTraceOperations[i].m_cy << " " << "cost: " << m_backTraceOperations[i].m_cost << std::endl;
+			//x.at(k++) = cy;
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_nop)
+		{
+			//std::cout << " " << "cost: " << operation.m_cost << std::endl;
+			//k++;
+			std::cout << std::endl;
+		}
+	}
+	//std::cout << x << std::endl;
 }
 
 const std::vector<EditDistance::Operation>& EditDistance::mGetBackTrace()
@@ -336,12 +372,12 @@ EditDistance::BackTraceOperation::BackTraceOperation()
 {
 }
 
-EditDistance::BackTraceOperation::BackTraceOperation(const std::string& x, char operandx, char operandy, const std::string& operation, double cost) :
+EditDistance::BackTraceOperation::BackTraceOperation(const std::string& x, char cx, char cy, const std::string& operation, double cost) :
 m_x(x),
-m_operandx(operandx),
-m_operandy(operandy),
+m_cx(cx),
+m_cy(cy),
 m_operation(operation),
-m_cost()
+m_cost(cost)
 {
 }
 
@@ -354,6 +390,7 @@ LevenshteinDistance::LevenshteinDistance(std::string& x, std::string& y) :
 {
 	mCreateTable();
 	mCreateBackTrace();
+	mCreateBackTraceOperations();
 }
 
 LevenshteinDistance::~LevenshteinDistance()
@@ -379,6 +416,7 @@ EditDistance(x, y)
 {
 	mCreateTable();
 	mCreateBackTrace();
+	mCreateBackTraceOperations();
 }
 
 LongestCommonSubsequence::~LongestCommonSubsequence()
