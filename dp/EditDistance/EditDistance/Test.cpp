@@ -258,7 +258,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		std::cout << s << std::endl;
 	}
-	std::cout << "Start of test 1" << std::endl;
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
