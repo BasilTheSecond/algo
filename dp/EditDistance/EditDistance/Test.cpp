@@ -117,8 +117,6 @@ public:
 	void mPrintBackTraceOperations();
 	const std::vector<BackTraceOperation>& mGetBackTraceOperations();
 	const std::vector<Operation>& mGetBackTrace();
-	std::vector<std::string> mGetCommonSubstrings();
-	std::vector<std::string> mGetAlignedStrings();
 
 protected:
 	void mCreateTable();
@@ -128,6 +126,7 @@ protected:
 protected:
 	std::string m_x;
 	std::string m_y;
+	std::vector<BackTraceOperation> m_backTraceOperations;
 
 private:
 	virtual double mInsertionCost(int i, int j) = 0;
@@ -137,7 +136,6 @@ private:
 private:
 	std::map<std::pair<int, int>, Cost> m_table; // table with back-trace
 	std::vector<Operation> m_backTrace;
-	std::vector<BackTraceOperation> m_backTraceOperations;
 };
 
 class LevenshteinDistance : public EditDistance
@@ -145,6 +143,8 @@ class LevenshteinDistance : public EditDistance
 public:
 	LevenshteinDistance(std::string& x, std::string& y);
 	virtual ~LevenshteinDistance();
+	std::vector<std::string> mGetCommonSubstrings();
+	std::vector<std::string> mGetAlignedStrings();
 
 private:
 	virtual double mInsertionCost(int i, int j);
@@ -241,9 +241,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string y4("#MICHAELANGELO");
 	LongestCommonSubsequence longestCommonSubsequence4(x4, y4);
 	longestCommonSubsequence4.mPrintBackTraceOperations();
-	std::vector<std::string> commonSubStrings4 = longestCommonSubsequence4.mGetCommonSubstrings();
+	LevenshteinDistance levenshteinDistance4(x4, y4);
+	std::vector<std::string> commonSubStrings4 = levenshteinDistance4.mGetCommonSubstrings();
 	std::sort(commonSubStrings4.begin(), commonSubStrings4.end());
 	for (std::string s : commonSubStrings4)
+	{
+		std::cout << s << std::endl;
+	}
+	std::vector<std::string> alignedStrings4 = levenshteinDistance4.mGetAlignedStrings();
+	for (std::string s : alignedStrings4)
 	{
 		std::cout << s << std::endl;
 	}
@@ -252,9 +258,15 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::string y5("#HIEROGLYPHOLOGY");
 	LongestCommonSubsequence longestCommonSubsequence5(x5, y5);
 	longestCommonSubsequence5.mPrintBackTraceOperations();
-	std::vector<std::string> commonSubStrings5 = longestCommonSubsequence5.mGetCommonSubstrings();
+	LevenshteinDistance levenshteinDistance5(x5, y5);
+	std::vector<std::string> commonSubStrings5 = levenshteinDistance5.mGetCommonSubstrings();
 	std::sort(commonSubStrings5.begin(), commonSubStrings5.end());
 	for (std::string s : commonSubStrings5)
+	{
+		std::cout << s << std::endl;
+	}
+	std::vector<std::string> alignedStrings5 = levenshteinDistance5.mGetAlignedStrings();
+	for (std::string s : alignedStrings5)
 	{
 		std::cout << s << std::endl;
 	}
@@ -381,7 +393,7 @@ const std::vector<EditDistance::BackTraceOperation>& EditDistance::mGetBackTrace
 	return m_backTraceOperations;
 }
 
-std::vector<std::string> EditDistance::mGetCommonSubstrings()
+std::vector<std::string> LevenshteinDistance::mGetCommonSubstrings()
 {
 	std::vector<std::string> result;
 	std::string s;
@@ -400,7 +412,7 @@ std::vector<std::string> EditDistance::mGetCommonSubstrings()
 	return result;
 }
 
-std::vector<std::string> EditDistance::mGetAlignedStrings()
+std::vector<std::string> LevenshteinDistance::mGetAlignedStrings()
 {
 	std::vector<std::string> result;
 	std::string s1;
@@ -487,7 +499,7 @@ EditDistance::BackTraceOperation::~BackTraceOperation()
 }
 
 LevenshteinDistance::LevenshteinDistance(std::string& x, std::string& y) :
-	EditDistance(x, y)
+EditDistance(x, y)
 {
 	mCreateTable();
 	mCreateBackTrace();
