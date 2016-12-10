@@ -173,74 +173,94 @@ const std::string EditDistance::Operation::k_nop(std::string("nop"));
 int _tmain(int argc, _TCHAR* argv[])
 {
 	std::cout << "Start of test 0" << std::endl;
+	std::cout << "---------------" << std::endl;
 	std::string x0("#hello");
 	std::string y0("#soo");
 	LevenshteinDistance levenshteinDistance0(x0, y0);
 	levenshteinDistance0.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> commonSubStrings0 = levenshteinDistance0.mGetCommonSubstrings();
 	std::sort(commonSubStrings0.begin(), commonSubStrings0.end());
 	for (std::string s : commonSubStrings0)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> alignedStrings0 = levenshteinDistance0.mGetAlignedStrings();
 	for (std::string s : alignedStrings0)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::cout << "Start of test 1" << std::endl;
+	std::cout << "---------------" << std::endl;
 	std::string x1("#EXECUTION");
 	std::string y1("#INTENTION");
 	LevenshteinDistance levenshteinDistance1(x1, y1);
 	levenshteinDistance1.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> commonSubStrings1 = levenshteinDistance1.mGetCommonSubstrings();
 	std::sort(commonSubStrings1.begin(), commonSubStrings1.end());
 	for (std::string s : commonSubStrings1)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> alignedStrings1 = levenshteinDistance1.mGetAlignedStrings();
 	for (std::string s : alignedStrings1)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::cout << "Start of test 2" << std::endl;
+	std::cout << "---------------" << std::endl;
 	std::string x2("#HELLO,WORLD");
 	std::string y2("#BLAH,BLAH");
 	LevenshteinDistance levenshteinDistance2(x2, y2);
 	levenshteinDistance2.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> commonSubStrings2 = levenshteinDistance2.mGetCommonSubstrings();
 	std::sort(commonSubStrings2.begin(), commonSubStrings2.end());
 	for (std::string s : commonSubStrings2)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> alignedStrings2 = levenshteinDistance2.mGetAlignedStrings();
 	for (std::string s : alignedStrings2)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::cout << "Start of test 3" << std::endl;
+	std::cout << "---------------" << std::endl;
 	std::string x3("#AGGCTATCACCTGACCTCCAGGCCGATGCCC");
 	std::string y3("#TAGCTATCACGACCGCGGTCGATTTGCCCGAC");
 	LevenshteinDistance levenshteinDistance3(x3, y3);
 	levenshteinDistance3.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> commonSubStrings3 = levenshteinDistance3.mGetCommonSubstrings();
 	std::sort(commonSubStrings3.begin(), commonSubStrings3.end());
 	for (std::string s : commonSubStrings3)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> alignedStrings3 = levenshteinDistance3.mGetAlignedStrings();
 	for (std::string s : alignedStrings3)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::cout << "Start of test 4" << std::endl;
+	std::cout << "---------------" << std::endl;
 	std::string x4("#HIEROGLYPHOLOGY");
 	std::string y4("#MICHAELANGELO");
 	LongestCommonSubsequence longestCommonSubsequence4(x4, y4);
 	longestCommonSubsequence4.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
+	std::cout << longestCommonSubsequence4.mGetLongestCommonSubsequence() << std::endl;
+	std::cout << "---------------" << std::endl;
 	LevenshteinDistance levenshteinDistance4(x4, y4);
 	std::vector<std::string> commonSubStrings4 = levenshteinDistance4.mGetCommonSubstrings();
 	std::sort(commonSubStrings4.begin(), commonSubStrings4.end());
@@ -248,16 +268,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> alignedStrings4 = levenshteinDistance4.mGetAlignedStrings();
 	for (std::string s : alignedStrings4)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::cout << "Start of test 5" << std::endl;
+	std::cout << "---------------" << std::endl;
 	std::string x5("#MICHAELANGELO");
 	std::string y5("#HIEROGLYPHOLOGY");
 	LongestCommonSubsequence longestCommonSubsequence5(x5, y5);
 	longestCommonSubsequence5.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
+	std::cout << longestCommonSubsequence5.mGetLongestCommonSubsequence() << std::endl;
+	std::cout << "---------------" << std::endl;
 	LevenshteinDistance levenshteinDistance5(x5, y5);
 	std::vector<std::string> commonSubStrings5 = levenshteinDistance5.mGetCommonSubstrings();
 	std::sort(commonSubStrings5.begin(), commonSubStrings5.end());
@@ -265,11 +291,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::vector<std::string> alignedStrings5 = levenshteinDistance5.mGetAlignedStrings();
 	for (std::string s : alignedStrings5)
 	{
 		std::cout << s << std::endl;
 	}
+	std::cout << "---------------" << std::endl;
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
@@ -535,6 +563,19 @@ EditDistance(x, y)
 
 LongestCommonSubsequence::~LongestCommonSubsequence()
 {
+}
+
+std::string LongestCommonSubsequence::mGetLongestCommonSubsequence()
+{
+	std::string s;
+	for (size_t i = 0; i < m_backTraceOperations.size(); i++)
+	{
+		if (m_backTraceOperations[i].m_operation == Operation::k_substitute && m_backTraceOperations[i].m_cx == m_backTraceOperations[i].m_cy)
+		{
+			s.insert(s.size(), 1, m_backTraceOperations[i].m_cx);
+		}
+	}
+	return s;
 }
 
 double LongestCommonSubsequence::mInsertionCost(int i, int j)
