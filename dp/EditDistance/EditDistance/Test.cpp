@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <limits>
 
 // Explanations of insertion, deletion and substitution steps:
 // Elements in the edit step table represent x in the various stages of transformation
@@ -63,29 +64,12 @@
 class EditDistance
 {
 public:
-	EditDistance(std::string& x, std::string& y);
-	virtual ~EditDistance();
-	void mPrintSteps();
-
-protected:
-	void mComputeTable();
-
-protected:
-	std::string m_x;
-	std::string m_y;
-
-private:
-	virtual double mInsertionCost(int i, int j) = 0;
-	virtual double mDeletionCost(int i, int j) = 0;
-	virtual double mSubstitutionCost(int i, int j) = 0;
-
-private:
-	class BackTrace
+	class Cost
 	{
 	public:
-		BackTrace();
-		BackTrace(std::pair<int, int>& parent, double cost, std::string& operation);
-		~BackTrace();
+		Cost();
+		Cost(std::pair<int, int>& parent, double cost, const std::string& operation);
+		~Cost();
 
 	public:
 		std::pair<int, int> m_parent;
@@ -93,8 +77,65 @@ private:
 		std::string m_operation;
 	};
 
+	class Operation
+	{
+	public:
+		Operation();
+		Operation(std::pair<int, int>& position, std::string& operation, double cost);
+		~Operation();
+
+	public:
+		std::pair<int, int> m_position;
+		std::string m_operation;
+		double m_cost;
+
+	public:
+		static const std::string k_delete;
+		static const std::string k_insert;
+		static const std::string k_substitute;
+		static const std::string k_nop;
+	};
+
+	class BackTraceOperation
+	{
+	public:
+		BackTraceOperation();
+		BackTraceOperation(const std::string& x, char cx, char cy, const std::string& operation, double cost);
+		~BackTraceOperation();
+
+	public:
+		std::string m_x;
+		char m_cx;
+		char m_cy;
+		std::string m_operation;
+		double m_cost;
+	};
+
+public:
+	EditDistance(std::string& x, std::string& y);
+	virtual ~EditDistance();
+	void mPrintBackTraceOperations();
+	const std::vector<BackTraceOperation>& mGetBackTraceOperations();
+	const std::vector<Operation>& mGetBackTrace();
+
+protected:
+	void mCreateTable();
+	void mCreateBackTrace();
+	void mCreateBackTraceOperations();
+
+protected:
+	std::string m_x;
+	std::string m_y;
+	std::vector<BackTraceOperation> m_backTraceOperations;
+
 private:
-	std::map<std::pair<int, int>, BackTrace> m_table; // table with back-trace
+	virtual double mInsertionCost(int i, int j) = 0;
+	virtual double mDeletionCost(int i, int j) = 0;
+	virtual double mSubstitutionCost(int i, int j) = 0;
+
+private:
+	std::map<std::pair<int, int>, Cost> m_table; // table with back-trace
+	std::vector<Operation> m_backTrace;
 };
 
 class LevenshteinDistance : public EditDistance
@@ -102,6 +143,8 @@ class LevenshteinDistance : public EditDistance
 public:
 	LevenshteinDistance(std::string& x, std::string& y);
 	virtual ~LevenshteinDistance();
+	std::vector<std::string> mGetCommonSubstrings();
+	std::vector<std::string> mGetAlignedStrings();
 
 private:
 	virtual double mInsertionCost(int i, int j);
@@ -109,26 +152,160 @@ private:
 	virtual double mSubstitutionCost(int i, int j);
 };
 
+class LongestCommonSubsequence : public EditDistance
+{
+public:
+	LongestCommonSubsequence(std::string& x, std::string& y);
+	virtual ~LongestCommonSubsequence();
+	std::string mGetLongestCommonSubsequence();
+
+private:
+	virtual double mInsertionCost(int i, int j);
+	virtual double mDeletionCost(int i, int j);
+	virtual double mSubstitutionCost(int i, int j);
+};
+
+const std::string EditDistance::Operation::k_delete(std::string("delete"));
+const std::string EditDistance::Operation::k_insert(std::string("insert"));
+const std::string EditDistance::Operation::k_substitute(std::string("substitute"));
+const std::string EditDistance::Operation::k_nop(std::string("nop"));
+
 int _tmain(int argc, _TCHAR* argv[])
 {
+	std::cout << "Start of test 0" << std::endl;
+	std::cout << "---------------" << std::endl;
+	std::string x0("#hello");
+	std::string y0("#soo");
+	LevenshteinDistance levenshteinDistance0(x0, y0);
+	levenshteinDistance0.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> commonSubStrings0 = levenshteinDistance0.mGetCommonSubstrings();
+	std::sort(commonSubStrings0.begin(), commonSubStrings0.end());
+	for (std::string s : commonSubStrings0)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> alignedStrings0 = levenshteinDistance0.mGetAlignedStrings();
+	for (std::string s : alignedStrings0)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::cout << "Start of test 1" << std::endl;
+	std::cout << "---------------" << std::endl;
 	std::string x1("#EXECUTION");
 	std::string y1("#INTENTION");
 	LevenshteinDistance levenshteinDistance1(x1, y1);
-	std::cout << "Steps:" << std::endl;
-	levenshteinDistance1.mPrintSteps();
+	levenshteinDistance1.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> commonSubStrings1 = levenshteinDistance1.mGetCommonSubstrings();
+	std::sort(commonSubStrings1.begin(), commonSubStrings1.end());
+	for (std::string s : commonSubStrings1)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> alignedStrings1 = levenshteinDistance1.mGetAlignedStrings();
+	for (std::string s : alignedStrings1)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::cout << "Start of test 2" << std::endl;
+	std::cout << "---------------" << std::endl;
 	std::string x2("#HELLO,WORLD");
 	std::string y2("#BLAH,BLAH");
 	LevenshteinDistance levenshteinDistance2(x2, y2);
-	std::cout << "Steps:" << std::endl;
-	levenshteinDistance2.mPrintSteps();
+	levenshteinDistance2.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> commonSubStrings2 = levenshteinDistance2.mGetCommonSubstrings();
+	std::sort(commonSubStrings2.begin(), commonSubStrings2.end());
+	for (std::string s : commonSubStrings2)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> alignedStrings2 = levenshteinDistance2.mGetAlignedStrings();
+	for (std::string s : alignedStrings2)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::cout << "Start of test 3" << std::endl;
+	std::cout << "---------------" << std::endl;
+	std::string x3("#AGGCTATCACCTGACCTCCAGGCCGATGCCC");
+	std::string y3("#TAGCTATCACGACCGCGGTCGATTTGCCCGAC");
+	LevenshteinDistance levenshteinDistance3(x3, y3);
+	levenshteinDistance3.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> commonSubStrings3 = levenshteinDistance3.mGetCommonSubstrings();
+	std::sort(commonSubStrings3.begin(), commonSubStrings3.end());
+	for (std::string s : commonSubStrings3)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> alignedStrings3 = levenshteinDistance3.mGetAlignedStrings();
+	for (std::string s : alignedStrings3)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::cout << "Start of test 4" << std::endl;
+	std::cout << "---------------" << std::endl;
+	std::string x4("#HIEROGLYPHOLOGY");
+	std::string y4("#MICHAELANGELO");
+	LongestCommonSubsequence longestCommonSubsequence4(x4, y4);
+	longestCommonSubsequence4.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
+	std::cout << longestCommonSubsequence4.mGetLongestCommonSubsequence() << std::endl;
+	std::cout << "---------------" << std::endl;
+	LevenshteinDistance levenshteinDistance4(x4, y4);
+	std::vector<std::string> commonSubStrings4 = levenshteinDistance4.mGetCommonSubstrings();
+	std::sort(commonSubStrings4.begin(), commonSubStrings4.end());
+	for (std::string s : commonSubStrings4)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> alignedStrings4 = levenshteinDistance4.mGetAlignedStrings();
+	for (std::string s : alignedStrings4)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::cout << "Start of test 5" << std::endl;
+	std::cout << "---------------" << std::endl;
+	std::string x5("#MICHAELANGELO");
+	std::string y5("#HIEROGLYPHOLOGY");
+	LongestCommonSubsequence longestCommonSubsequence5(x5, y5);
+	longestCommonSubsequence5.mPrintBackTraceOperations();
+	std::cout << "---------------" << std::endl;
+	std::cout << longestCommonSubsequence5.mGetLongestCommonSubsequence() << std::endl;
+	std::cout << "---------------" << std::endl;
+	LevenshteinDistance levenshteinDistance5(x5, y5);
+	std::vector<std::string> commonSubStrings5 = levenshteinDistance5.mGetCommonSubstrings();
+	std::sort(commonSubStrings5.begin(), commonSubStrings5.end());
+	for (std::string s : commonSubStrings5)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
+	std::vector<std::string> alignedStrings5 = levenshteinDistance5.mGetAlignedStrings();
+	for (std::string s : alignedStrings5)
+	{
+		std::cout << s << std::endl;
+	}
+	std::cout << "---------------" << std::endl;
 	std::cout << "Press any key to exit" << std::endl;
 	getchar();
 	return 0;
 }
 
 EditDistance::EditDistance(std::string& x, std::string& y) :
-	m_x(x),
-	m_y(y)
+m_x(x),
+m_y(y)
 {
 }
 
@@ -136,73 +313,225 @@ EditDistance::~EditDistance()
 {
 }
 
-void EditDistance::mComputeTable()
+void EditDistance::mCreateTable()
 {
-	m_table[std::pair<int, int>(0, 0)] = BackTrace(std::pair<int, int>(-1, -1), mSubstitutionCost(0, 0), std::string("substitute"));
-	for (size_t i = 1; i < m_x.size(); i++)
+	for (int i = 0; i < static_cast<int>(m_x.size()); i++)
 	{
-		m_table[std::pair<int, int>(i, 0)] = BackTrace(std::pair<int, int>(i - 1, 0), m_table[std::pair<int, int>(i - 1, 0)].m_cost + mDeletionCost(i, 0), std::string("delete"));
-	}
-	for (size_t j = 1; j < m_y.size(); j++)
-	{
-		m_table[std::pair<int, int>(0, j)] = BackTrace(std::pair<int, int>(0, j - 1), m_table[std::pair<int, int>(0, j - 1)].m_cost + mInsertionCost(0, j), std::string("insert"));
-	}
-	for (size_t i = 1; i < m_x.size(); i++)
-	{
-		for (size_t j = 1; j < m_y.size(); j++)
+		for (int j = 0; j < static_cast<int>(m_y.size()); j++)
 		{
-			std::vector<BackTrace> costs;
-			costs.push_back(BackTrace(std::pair<int, int>(i - 1, j - 1), m_table[std::pair<int, int>(i - 1, j - 1)].m_cost + mSubstitutionCost(i, j), std::string("substitute")));
-			costs.push_back(BackTrace(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].m_cost + mDeletionCost(i, j), std::string("delete")));
-			costs.push_back(BackTrace(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].m_cost + mInsertionCost(i, j), std::string("insert")));
-			std::sort(costs.begin(),
-								costs.end(),
-								[](BackTrace& a, BackTrace& b)
-								{
-									return a.m_cost != b.m_cost ? a.m_cost < b.m_cost : a.m_cost < b.m_cost;
-								});
-			m_table[std::pair<int, int>(i, j)] = costs[0];
+			std::vector<Cost> costs;
+			Cost minCost;
+			if (i - 1 >= 0 && j - 1 >= 0)
+			{
+				costs.push_back(Cost(std::pair<int, int>(i - 1, j - 1), m_table[std::pair<int, int>(i - 1, j - 1)].m_cost + mSubstitutionCost(i, j), Operation::k_substitute));
+				costs.push_back(Cost(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].m_cost + mDeletionCost(i, j), Operation::k_delete));
+				costs.push_back(Cost(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].m_cost + mInsertionCost(i, j), Operation::k_insert));
+				auto lambdaMin = [](Cost& a, Cost& b)
+				{
+					return a.m_cost < b.m_cost;
+				};
+				std::vector<Cost>::iterator iteratorCost = std::min_element(costs.begin(), costs.end(), lambdaMin);
+				minCost = *iteratorCost;
+			}
+			else if (i == 0 && j - 1 >= 0)
+			{
+				minCost = Cost(std::pair<int, int>(i, j - 1), m_table[std::pair<int, int>(i, j - 1)].m_cost + mInsertionCost(i, j), Operation::k_insert);
+			}
+			else if (i - 1 >= 0 && j == 0)
+			{
+				minCost = Cost(std::pair<int, int>(i - 1, j), m_table[std::pair<int, int>(i - 1, j)].m_cost + mDeletionCost(i, j), Operation::k_delete);
+			}
+			else // i == 0 && j == 0
+			{
+				minCost = Cost(std::pair<int, int>(-1, -1), 0, Operation::k_nop);
+			}
+			m_table[std::pair<int, int>(i, j)] = minCost;
 		}
 	}
 }
 
-void EditDistance::mPrintSteps()
+void EditDistance::mCreateBackTrace()
 {
-	BackTrace root = m_table[std::pair<int, int>(m_x.size() - 1, m_y.size() - 1)];
-	std::cout << "(" << (m_x.size() - 1) << "," << (m_y.size() - 1) << "): ";
-	std::cout << m_x << "-" << std::endl;
-	for (BackTrace next = root; true; next = m_table[std::pair<int, int>(next.m_parent)])
+	for (std::pair<int, int> position = std::pair<int, int>(m_x.size() - 1, m_y.size() - 1); position != std::pair<int, int>(-1, -1); position = m_table[position].m_parent)
 	{
-		std::cout << "(" << next.m_parent.first << "," << next.m_parent.second << "): ";
-		std::cout << m_x.substr(0, next.m_parent.first + 1) << "-" << m_y.substr(next.m_parent.second + 1) << " " << next.m_operation << "(" << next.m_cost << ")" << std::endl;
-		if (next.m_parent == std::pair<int, int>(0, 0))
+		m_backTrace.push_back(Operation(position, m_table[position].m_operation, m_table[position].m_cost));
+	}
+}
+
+void EditDistance::mCreateBackTraceOperations()
+{
+	std::string x = m_x;
+	for (size_t i = 0, k = 0; i < m_backTrace.size(); i++)
+	{
+		Operation operation = m_backTrace[m_backTrace.size() - 1 - i];
+		char cx = m_x.at(operation.m_position.first);
+		char cy = m_y.at(operation.m_position.second);
+		m_backTraceOperations.push_back(BackTraceOperation(x, cx, cy, operation.m_operation, operation.m_cost));
+		if (operation.m_operation == Operation::k_delete)
 		{
-			std::cout << "(" << m_table[next.m_parent].m_parent.first << "," << m_table[next.m_parent].m_parent.second << "): ";
-			std::cout << "-" << m_y << " " << m_table[next.m_parent].m_operation << "(" << m_table[next.m_parent].m_cost << ")" << std::endl;
-			break;
+			x.erase(k, 1);
+		}
+		else if (operation.m_operation == Operation::k_insert)
+		{
+			x.insert(k++, 1, cy);
+		}
+		else if (operation.m_operation == Operation::k_substitute)
+		{
+			x.at(k++) = cy;
+		}
+		else if (operation.m_operation == Operation::k_nop)
+		{
+			k++;
+		}
+	}
+	m_backTraceOperations.push_back(BackTraceOperation(x, -1, -1, Operation::k_nop, 0));
+}
+
+void EditDistance::mPrintBackTraceOperations()
+{
+	for (size_t i = 0; i < m_backTraceOperations.size(); i++)
+	{
+		std::cout << m_backTraceOperations[i].m_x;
+		if (m_backTraceOperations[i].m_operation == Operation::k_delete)
+		{
+			std::cout << " " << m_backTraceOperations[i].m_operation << " " << m_backTraceOperations[i].m_cx << " " << "cost: " << m_backTraceOperations[i].m_cost << std::endl;
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_insert)
+		{
+			std::cout << " " << m_backTraceOperations[i].m_operation << " " << m_backTraceOperations[i].m_cy << " " << "cost: " << m_backTraceOperations[i].m_cost << std::endl;
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_substitute)
+		{
+			std::cout << " " << m_backTraceOperations[i].m_operation << " " << m_backTraceOperations[i].m_cx << " with " << m_backTraceOperations[i].m_cy << " " << "cost: " << m_backTraceOperations[i].m_cost << std::endl;
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_nop)
+		{
+			std::cout << std::endl;
 		}
 	}
 }
 
-EditDistance::BackTrace::BackTrace(std::pair<int, int>& parent, double cost, std::string& operation) :
-	m_parent(parent),
-	m_cost(cost),
-	m_operation(operation)
+const std::vector<EditDistance::Operation>& EditDistance::mGetBackTrace()
+{
+	return m_backTrace;
+}
+
+const std::vector<EditDistance::BackTraceOperation>& EditDistance::mGetBackTraceOperations()
+{
+	return m_backTraceOperations;
+}
+
+std::vector<std::string> LevenshteinDistance::mGetCommonSubstrings()
+{
+	std::vector<std::string> result;
+	std::string s;
+	for (size_t i = 0; i < m_backTraceOperations.size(); i++)
+	{
+		if (m_backTraceOperations[i].m_operation == Operation::k_substitute && m_backTraceOperations[i].m_cx == m_backTraceOperations[i].m_cy)
+		{
+			s.insert(s.size(), 1, m_backTraceOperations[i].m_cx);
+		}
+		else if (s.size() > 0)
+		{
+			result.push_back(s);
+			s.clear();
+		}
+	}
+	return result;
+}
+
+std::vector<std::string> LevenshteinDistance::mGetAlignedStrings()
+{
+	std::vector<std::string> result;
+	std::string s1;
+	std::string s2;
+	std::string s3;
+	for (size_t i = 0; i < m_backTraceOperations.size(); i++)
+	{
+		if (m_backTraceOperations[i].m_operation == Operation::k_delete)
+		{
+			s1.insert(s1.size(), 1, m_backTraceOperations[i].m_cx);
+			s2.insert(s2.size(), 1, '-');
+			s3.insert(s3.size(), 1, ' ');
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_insert)
+		{
+			s1.insert(s1.size(), 1, '-');
+			s2.insert(s2.size(), 1, m_backTraceOperations[i].m_cy);
+			s3.insert(s3.size(), 1, ' ');
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_substitute && m_backTraceOperations[i].m_cx == m_backTraceOperations[i].m_cy)
+		{
+			s1.insert(s1.size(), 1, m_backTraceOperations[i].m_cx);
+			s2.insert(s2.size(), 1, m_backTraceOperations[i].m_cy);
+			s3.insert(s3.size(), 1, '*'); // indicates alignment
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_substitute && m_backTraceOperations[i].m_cx != m_backTraceOperations[i].m_cy)
+		{
+			s1.insert(s1.size(), 1, m_backTraceOperations[i].m_cx);
+			s2.insert(s2.size(), 1, m_backTraceOperations[i].m_cy);
+			s3.insert(s3.size(), 1, ' ');
+		}
+	}
+	result.push_back(s1);
+	result.push_back(s2);
+	result.push_back(s3);
+	return result;
+}
+
+EditDistance::Cost::Cost(std::pair<int, int>& parent, double cost, const std::string& operation) :
+m_parent(parent),
+m_cost(cost),
+m_operation(operation)
 {
 }
 
-EditDistance::BackTrace::BackTrace()
+EditDistance::Cost::Cost()
 {
 }
 
-EditDistance::BackTrace::~BackTrace()
+EditDistance::Cost::~Cost()
+{
+}
+
+EditDistance::Operation::Operation()
+{
+}
+
+EditDistance::Operation::Operation(std::pair<int, int>& position, std::string& operation, double cost) :
+m_position(position),
+m_operation(operation),
+m_cost(cost)
+{
+}
+
+EditDistance::Operation::~Operation()
+{
+}
+
+EditDistance::BackTraceOperation::BackTraceOperation()
+{
+}
+
+EditDistance::BackTraceOperation::BackTraceOperation(const std::string& x, char cx, char cy, const std::string& operation, double cost) :
+m_x(x),
+m_cx(cx),
+m_cy(cy),
+m_operation(operation),
+m_cost(cost)
+{
+}
+
+EditDistance::BackTraceOperation::~BackTraceOperation()
 {
 }
 
 LevenshteinDistance::LevenshteinDistance(std::string& x, std::string& y) :
-	EditDistance(x, y)
+EditDistance(x, y)
 {
-	mComputeTable();
+	mCreateTable();
+	mCreateBackTrace();
+	mCreateBackTraceOperations();
 }
 
 LevenshteinDistance::~LevenshteinDistance()
@@ -218,7 +547,47 @@ double LevenshteinDistance::mDeletionCost(int i, int j)
 {
 	return 1;
 }
+
 double LevenshteinDistance::mSubstitutionCost(int i, int j)
 {
 	return (m_x[i] == m_y[j]) ? 0 : 2;
+}
+
+LongestCommonSubsequence::LongestCommonSubsequence(std::string& x, std::string& y) :
+EditDistance(x, y)
+{
+	mCreateTable();
+	mCreateBackTrace();
+	mCreateBackTraceOperations();
+}
+
+LongestCommonSubsequence::~LongestCommonSubsequence()
+{
+}
+
+std::string LongestCommonSubsequence::mGetLongestCommonSubsequence()
+{
+	std::string s;
+	for (size_t i = 0; i < m_backTraceOperations.size(); i++)
+	{
+		if (m_backTraceOperations[i].m_operation == Operation::k_substitute && m_backTraceOperations[i].m_cx == m_backTraceOperations[i].m_cy)
+		{
+			s.insert(s.size(), 1, m_backTraceOperations[i].m_cx);
+		}
+	}
+	return s;
+}
+
+double LongestCommonSubsequence::mInsertionCost(int i, int j)
+{
+	return 1;
+}
+
+double LongestCommonSubsequence::mDeletionCost(int i, int j)
+{
+	return 1;
+}
+double LongestCommonSubsequence::mSubstitutionCost(int i, int j)
+{
+	return (m_x[i] == m_y[j]) ? 0 : std::numeric_limits<double>::max();
 }
