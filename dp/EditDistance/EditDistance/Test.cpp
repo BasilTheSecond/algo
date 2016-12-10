@@ -276,8 +276,8 @@ int _tmain(int argc, _TCHAR* argv[])
 }
 
 EditDistance::EditDistance(std::string& x, std::string& y) :
-	m_x(x),
-	m_y(y)
+m_x(x),
+m_y(y)
 {
 }
 
