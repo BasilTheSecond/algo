@@ -118,6 +118,7 @@ public:
 	const std::vector<BackTraceOperation>& mGetBackTraceOperations();
 	const std::vector<Operation>& mGetBackTrace();
 	std::vector<std::string> mGetCommonSubstrings();
+	std::vector<std::string> mGetAlignedStrings();
 
 protected:
 	void mCreateTable();
@@ -182,6 +183,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		std::cout << s << std::endl;
 	}
+	std::vector<std::string> alignedStrings0 = levenshteinDistance0.mGetAlignedStrings();
+	for (std::string s : alignedStrings0)
+	{
+		std::cout << s << std::endl;
+	}
 	std::cout << "Start of test 1" << std::endl;
 	std::string x1("#EXECUTION");
 	std::string y1("#INTENTION");
@@ -190,6 +196,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::vector<std::string> commonSubStrings1 = levenshteinDistance1.mGetCommonSubstrings();
 	std::sort(commonSubStrings1.begin(), commonSubStrings1.end());
 	for (std::string s : commonSubStrings1)
+	{
+		std::cout << s << std::endl;
+	}
+	std::vector<std::string> alignedStrings1 = levenshteinDistance1.mGetAlignedStrings();
+	for (std::string s : alignedStrings1)
 	{
 		std::cout << s << std::endl;
 	}
@@ -204,6 +215,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		std::cout << s << std::endl;
 	}
+	std::vector<std::string> alignedStrings2 = levenshteinDistance2.mGetAlignedStrings();
+	for (std::string s : alignedStrings2)
+	{
+		std::cout << s << std::endl;
+	}
 	std::cout << "Start of test 3" << std::endl;
 	std::string x3("#AGGCTATCACCTGACCTCCAGGCCGATGCCC");
 	std::string y3("#TAGCTATCACGACCGCGGTCGATTTGCCCGAC");
@@ -212,6 +228,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::vector<std::string> commonSubStrings3 = levenshteinDistance3.mGetCommonSubstrings();
 	std::sort(commonSubStrings3.begin(), commonSubStrings3.end());
 	for (std::string s : commonSubStrings3)
+	{
+		std::cout << s << std::endl;
+	}
+	std::vector<std::string> alignedStrings3 = levenshteinDistance3.mGetAlignedStrings();
+	for (std::string s : alignedStrings3)
 	{
 		std::cout << s << std::endl;
 	}
@@ -377,6 +398,45 @@ std::vector<std::string> EditDistance::mGetCommonSubstrings()
 			s.clear();
 		}
 	}
+	return result;
+}
+
+std::vector<std::string> EditDistance::mGetAlignedStrings()
+{
+	std::vector<std::string> result;
+	std::string s1;
+	std::string s2;
+	std::string s3;
+	for (size_t i = 0; i < m_backTraceOperations.size(); i++)
+	{
+		if (m_backTraceOperations[i].m_operation == Operation::k_delete)
+		{
+			s1.insert(s1.size(), 1, m_backTraceOperations[i].m_cx);
+			s2.insert(s2.size(), 1, '-');
+			s3.insert(s3.size(), 1, ' ');
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_insert)
+		{
+			s1.insert(s1.size(), 1, '-');
+			s2.insert(s2.size(), 1, m_backTraceOperations[i].m_cy);
+			s3.insert(s3.size(), 1, ' ');
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_substitute && m_backTraceOperations[i].m_cx == m_backTraceOperations[i].m_cy)
+		{
+			s1.insert(s1.size(), 1, m_backTraceOperations[i].m_cx);
+			s2.insert(s2.size(), 1, m_backTraceOperations[i].m_cy);
+			s3.insert(s3.size(), 1, '*'); // indicates alignment
+		}
+		else if (m_backTraceOperations[i].m_operation == Operation::k_substitute && m_backTraceOperations[i].m_cx != m_backTraceOperations[i].m_cy)
+		{
+			s1.insert(s1.size(), 1, m_backTraceOperations[i].m_cx);
+			s2.insert(s2.size(), 1, m_backTraceOperations[i].m_cy);
+			s3.insert(s3.size(), 1, ' ');
+		}
+	}
+	result.push_back(s1);
+	result.push_back(s2);
+	result.push_back(s3);
 	return result;
 }
 
