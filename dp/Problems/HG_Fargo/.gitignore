@@ -1,0 +1,6 @@
+*.sdf
+*.suo
+*.opensdf
+HG_Fargo/Debug/
+/Debug/
+/ipch/
