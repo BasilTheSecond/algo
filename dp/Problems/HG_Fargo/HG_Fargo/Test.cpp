@@ -37,21 +37,24 @@ HG_Fargo::HG_Fargo()
 					m_table[i][j] = values[0];
 				}
 			}
-			else if (j - costs[i] >= 0)
-			{
-				std::vector<std::pair<int, int>> candidates;
-				candidates.push_back(std::pair<int, int>(m_table[i - 1][j] + j, 0));
-				candidates.push_back(std::pair<int, int>(m_table[i - 1][j - costs[i]] + j - costs[i] + values[i], 1));
-				auto lambdaMax = [](std::pair<int, int>& a, std::pair<int, int>& b)
-				{
-					return a.first < b.first;
-				};
-				std::vector<std::pair<int, int>>::iterator iteratorCost = std::min_element(candidates.begin(), candidates.end(), lambdaMax);
-				m_table[i][j] = iteratorCost->first;
-			}
 			else
 			{
-				m_table[i][j] = m_table[i - 1][j] + j;
+				if (j - costs[i] >= 0)
+				{
+					std::vector<std::pair<int, std::pair<int, int>>> candidates;
+					candidates.push_back(std::pair<int, std::pair<int, int>>(m_table[i - 1][j], std::pair<int, int>(i - 1, j)));
+					candidates.push_back(std::pair<int, std::pair<int, int>>(m_table[i - 1][j - costs[i]] + values[i], std::pair<int, int>(i - 1, j - costs[i])));
+					auto lambdaMax = [](std::pair<int, std::pair<int, int>>& a, std::pair<int, std::pair<int, int>>& b)
+					{
+						return a.first >= b.first;
+					};
+					std::vector<std::pair<int, std::pair<int, int>>>::iterator iteratorCost = std::min_element(candidates.begin(), candidates.end(), lambdaMax);
+					m_table[i][j] = iteratorCost->first;
+				}
+				else
+				{
+					m_table[i][j] = m_table[i - 1][j];
+				}
 			}
 		}
 	}
