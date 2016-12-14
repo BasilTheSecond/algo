@@ -1,0 +1,6 @@
+*.sdf
+*.suo
+*.opensdf
+TheCoinChangeProblem/Debug/
+/Debug/
+/ipch/
