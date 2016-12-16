@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <functional>
+#include <map>
 
 // Example:
 // Input:
@@ -25,7 +25,8 @@ private:
 private:
 	int m_n;
 	std::vector<int> m_coins;
-	int m_dp;
+	std::map<std::pair<int, int>, int> m_dp;
+	int m_number;
 };
 
 //
@@ -35,7 +36,7 @@ m_n(n),
 m_coins(coins)
 {
 	std::sort(m_coins.begin(), m_coins.end());
-	m_dp = mDp(n, 0);
+	int m_number = mDp(n, 0);
 }
 
 //
@@ -49,7 +50,26 @@ TheCoinChangeProblem::~TheCoinChangeProblem()
 int 
 TheCoinChangeProblem::mDp(int i, int j)
 {
-	return 0;
+	if (m_dp.find(std::pair<int, int>(i, j)) == m_dp.end())
+	{
+		if (i == 0)
+		{
+			m_dp[std::pair<int, int>(i, j)] = 1;
+		}
+		else if (i < 0)
+		{
+			m_dp[std::pair<int, int>(i, j)] = 0;
+		}
+		else
+		{
+			m_dp[std::pair<int, int>(i, j)] = 0;
+			for (size_t k = j; k < m_coins.size(); k++)
+			{
+				m_dp[std::pair<int, int>(i, j)] += mDp(i - m_coins[k], k);
+			}
+		}
+	}
+	return m_dp[std::pair<int, int>(i, j)];
 }
 
 //
