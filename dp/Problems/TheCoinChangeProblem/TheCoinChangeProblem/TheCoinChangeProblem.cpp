@@ -36,18 +36,12 @@ TheCoinChangeProblem::~TheCoinChangeProblem()
 int 
 main()
 {
-	//int n, m;
-	//std::vector<int> coins;
-	//std::cin >> n >> m;
-	//for (int i = 0; i < m; i++)
-	//{
-	//	int c;
-	//	std::cin >> c;
-	//	coins.push_back(c);
-	//}
 	int n1 = 4;
 	std::vector<int> coins1 = { 1, 2, 3 };
 	TheCoinChangeProblem theCoinChangeProblem1(n1, coins1);
+	int n2 = 10;
+	std::vector<int> coins2 = { 2, 5, 3, 6 };
+	TheCoinChangeProblem theCoinChangeProblem2(n2, coins2);
 	std::cout << "Press any key to exit..." << std::endl;
 	getchar();
 	return 0;
