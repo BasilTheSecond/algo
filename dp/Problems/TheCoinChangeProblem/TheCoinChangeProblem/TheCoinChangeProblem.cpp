@@ -20,8 +20,12 @@ public:
 	~TheCoinChangeProblem();
 
 private:
+	int mDp(int i, int j);
+
+private:
 	int m_n;
 	std::vector<int> m_coins;
+	int m_dp;
 };
 
 //
@@ -31,12 +35,21 @@ m_n(n),
 m_coins(coins)
 {
 	std::sort(m_coins.begin(), m_coins.end());
+	m_dp = mDp(n, 0);
 }
 
 //
 
 TheCoinChangeProblem::~TheCoinChangeProblem()
 {
+}
+
+//
+
+int 
+TheCoinChangeProblem::mDp(int i, int j)
+{
+	return 0;
 }
 
 //
