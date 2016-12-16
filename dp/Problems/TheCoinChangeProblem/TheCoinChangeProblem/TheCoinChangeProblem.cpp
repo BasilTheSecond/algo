@@ -44,11 +44,27 @@ TheCoinChangeProblem::~TheCoinChangeProblem()
 int 
 main()
 {
+	std::cout << "Test #1" << std::endl;
 	int n1 = 4;
 	std::vector<int> coins1 = { 1, 2, 3 };
+	std::cout << "N=" << n1 << std::endl;
+	std::cout << "coins={ ";
+	for (int coin : coins1)
+	{
+		std::cout << coin << ", ";
+	}
+	std::cout << " }" << std::endl;
 	TheCoinChangeProblem theCoinChangeProblem1(n1, coins1);
+	std::cout << "Test #2" << std::endl;
 	int n2 = 10;
 	std::vector<int> coins2 = { 2, 5, 3, 6 };
+	std::cout << "N=" << n2 << std::endl;
+	std::cout << "coins={ ";
+	for (int coin : coins2)
+	{
+		std::cout << coin << ", ";
+	}
+	std::cout << " }" << std::endl;
 	TheCoinChangeProblem theCoinChangeProblem2(n2, coins2);
 	std::cout << "Press any key to exit..." << std::endl;
 	getchar();
