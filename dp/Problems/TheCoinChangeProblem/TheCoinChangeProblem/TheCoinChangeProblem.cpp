@@ -2,6 +2,8 @@
 #include <cstdio>
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <functional>
 
 // Example:
 // Input:
@@ -11,7 +13,6 @@
 // Output:
 // 4
 
-
 class TheCoinChangeProblem
 {
 public:
@@ -20,13 +21,14 @@ public:
 
 private:
 	int m_n;
-	const std::vector<int> m_coins;
+	std::vector<int> m_coins;
 };
 
 TheCoinChangeProblem::TheCoinChangeProblem(int n, const std::vector<int>& coins) :
 m_n(n),
 m_coins(coins)
 {
+	std::sort(m_coins.begin(), m_coins.end());
 }
 
 TheCoinChangeProblem::~TheCoinChangeProblem()
