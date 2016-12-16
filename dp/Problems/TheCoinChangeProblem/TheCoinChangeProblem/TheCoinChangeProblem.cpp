@@ -18,6 +18,7 @@ class TheCoinChangeProblem
 public:
 	TheCoinChangeProblem(int n, const std::vector<int>& coins);
 	~TheCoinChangeProblem();
+	int mGetResult();
 
 private:
 	int mDp(int i, int j);
@@ -26,17 +27,18 @@ private:
 	int m_n;
 	std::vector<int> m_coins;
 	std::map<std::pair<int, int>, int> m_dp;
-	int m_number;
+	int m_result;
 };
 
 //
 
 TheCoinChangeProblem::TheCoinChangeProblem(int n, const std::vector<int>& coins) :
 m_n(n),
-m_coins(coins)
+m_coins(coins),
+m_result(0)
 {
 	std::sort(m_coins.begin(), m_coins.end());
-	int m_number = mDp(n, 0);
+	m_result = mDp(n, 0);
 }
 
 //
@@ -74,6 +76,14 @@ TheCoinChangeProblem::mDp(int i, int j)
 //
 
 int 
+TheCoinChangeProblem::mGetResult()
+{
+	return m_result;
+}
+
+//
+
+int 
 main()
 {
 	std::cout << "Test #1" << std::endl;
@@ -87,6 +97,7 @@ main()
 	}
 	std::cout << " }" << std::endl;
 	TheCoinChangeProblem theCoinChangeProblem1(n1, coins1);
+	std::cout << "result=" << theCoinChangeProblem1.mGetResult() << std::endl;
 	std::cout << "Test #2" << std::endl;
 	int n2 = 10;
 	std::vector<int> coins2 = { 2, 5, 3, 6 };
@@ -98,6 +109,7 @@ main()
 	}
 	std::cout << " }" << std::endl;
 	TheCoinChangeProblem theCoinChangeProblem2(n2, coins2);
+	std::cout << "result=" << theCoinChangeProblem2.mGetResult() << std::endl;
 	std::cout << "Press any key to exit..." << std::endl;
 	getchar();
 	return 0;
