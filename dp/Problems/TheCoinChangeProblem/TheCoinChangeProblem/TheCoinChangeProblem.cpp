@@ -24,6 +24,8 @@ private:
 	std::vector<int> m_coins;
 };
 
+//
+
 TheCoinChangeProblem::TheCoinChangeProblem(int n, const std::vector<int>& coins) :
 m_n(n),
 m_coins(coins)
@@ -31,9 +33,13 @@ m_coins(coins)
 	std::sort(m_coins.begin(), m_coins.end());
 }
 
+//
+
 TheCoinChangeProblem::~TheCoinChangeProblem()
 {
 }
+
+//
 
 int 
 main()
