@@ -56,16 +56,15 @@ TheCoinChangeProblem::mDp(int i, int j)
 		{
 			m_dp[std::pair<int, int>(i, j)] = 1;
 		}
-		else if (i < 0)
-		{
-			m_dp[std::pair<int, int>(i, j)] = 0;
-		}
 		else
 		{
 			m_dp[std::pair<int, int>(i, j)] = 0;
 			for (size_t k = j; k < m_coins.size(); k++)
 			{
-				m_dp[std::pair<int, int>(i, j)] += mDp(i - m_coins[k], k);
+				if (i - m_coins[k] >= 0)
+				{
+					m_dp[std::pair<int, int>(i, j)] += mDp(i - m_coins[k], k);
+				}
 			}
 		}
 	}
