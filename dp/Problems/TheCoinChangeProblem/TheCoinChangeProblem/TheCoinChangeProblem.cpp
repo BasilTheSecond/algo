@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include <cstdint>
 
 // Example:
 // Input:
@@ -18,16 +19,16 @@ class TheCoinChangeProblem
 public:
 	TheCoinChangeProblem(int n, const std::vector<int>& coins);
 	~TheCoinChangeProblem();
-	int mGetResult();
+	uint64_t mGetResult();
 
 private:
-	int mDp(int i, int j);
+	uint64_t mDp(int i, int j);
 
 private:
 	int m_n;
 	std::vector<int> m_coins;
-	std::map<std::pair<int, int>, int> m_dp;
-	int m_result;
+	std::map<std::pair<int, int>, uint64_t> m_dp;
+	uint64_t m_result;
 };
 
 //
@@ -37,7 +38,7 @@ m_n(n),
 m_coins(coins),
 m_result(0)
 {
-	std::sort(m_coins.begin(), m_coins.end());
+	//std::sort(m_coins.begin(), m_coins.end());
 	m_result = mDp(n, 0);
 }
 
@@ -49,7 +50,7 @@ TheCoinChangeProblem::~TheCoinChangeProblem()
 
 //
 
-int 
+uint64_t
 TheCoinChangeProblem::mDp(int i, int j)
 {
 	if (m_dp.find(std::pair<int, int>(i, j)) == m_dp.end())
@@ -60,14 +61,15 @@ TheCoinChangeProblem::mDp(int i, int j)
 		}
 		else
 		{
-			m_dp[std::pair<int, int>(i, j)] = 0;
-			for (size_t k = j; k < m_coins.size(); k++)
+			uint64_t result = 0;
+			for (int k = j; k < m_coins.size(); k++)
 			{
 				if (i - m_coins[k] >= 0)
 				{
-					m_dp[std::pair<int, int>(i, j)] += mDp(i - m_coins[k], k);
+					result += mDp(i - m_coins[k], k);
 				}
 			}
+			m_dp[std::pair<int, int>(i, j)] = result;
 		}
 	}
 	return m_dp[std::pair<int, int>(i, j)];
@@ -75,7 +77,7 @@ TheCoinChangeProblem::mDp(int i, int j)
 
 //
 
-int 
+uint64_t
 TheCoinChangeProblem::mGetResult()
 {
 	return m_result;
