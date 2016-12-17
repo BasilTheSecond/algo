@@ -1,8 +1,6 @@
-//
 #include <cstdio>
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <map>
 #include <cstdint>
 
@@ -32,7 +30,6 @@ m_n(n),
 m_coins(coins),
 m_result(0)
 {
-	//std::sort(m_coins.begin(), m_coins.end());
 	m_result = mDp(n, 0);
 }
 
