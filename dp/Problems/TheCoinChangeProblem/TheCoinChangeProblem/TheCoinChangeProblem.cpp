@@ -6,13 +6,7 @@
 #include <map>
 #include <cstdint>
 
-// Example:
-// Input:
-// 4 3
-// 1 2 3
-
-// Output:
-// 4
+//
 
 class TheCoinChangeProblem
 {
@@ -100,6 +94,7 @@ main()
 	std::cout << " }" << std::endl;
 	TheCoinChangeProblem theCoinChangeProblem1(n1, coins1);
 	std::cout << "result=" << theCoinChangeProblem1.mGetResult() << std::endl;
+	std::cout << "Test " << (theCoinChangeProblem1.mGetResult() == 4 ? "PASSED" : "FAILED") << std::endl;
 	std::cout << "Test #2" << std::endl;
 	int n2 = 10;
 	std::vector<int> coins2 = { 2, 5, 3, 6 };
@@ -112,6 +107,7 @@ main()
 	std::cout << " }" << std::endl;
 	TheCoinChangeProblem theCoinChangeProblem2(n2, coins2);
 	std::cout << "result=" << theCoinChangeProblem2.mGetResult() << std::endl;
+	std::cout << "Test " << (theCoinChangeProblem2.mGetResult() == 5 ? "PASSED" : "FAILED") << std::endl;
 	// Input: N=18 M=23
 	// C={ 49 9 40 17 46 24 42 26 43 41 35 1 47 28 20 38 2 44 32 22 18 45 25 }
 	// Output: 18
@@ -127,6 +123,7 @@ main()
 	std::cout << " }" << std::endl;
 	TheCoinChangeProblem theCoinChangeProblem3(n3, coins3);
 	std::cout << "result=" << theCoinChangeProblem3.mGetResult() << std::endl;
+	std::cout << "Test " << (theCoinChangeProblem3.mGetResult() == 18 ? "PASSED" : "FAILED") << std::endl;
 	// Test Case #9 from https://www.hackerrank.com/challenges/coin-change
 	// Input: N=250 M=24
 	// C={ 41 34 46 9 37 32 42 21 7 13 1 24 3 43 2 23 8 45 19 30 29 18 35 11 }
@@ -143,6 +140,7 @@ main()
 	std::cout << " }" << std::endl;
 	TheCoinChangeProblem theCoinChangeProblem4(n4, coins4);
 	std::cout << "result=" << theCoinChangeProblem4.mGetResult() << std::endl;
+	std::cout << "Test " << (theCoinChangeProblem4.mGetResult() == 15685693751 ? "PASSED" : "FAILED") << std::endl;
 	std::cout << "Press any key to exit..." << std::endl;
 	getchar();
 	return 0;
