@@ -53,7 +53,7 @@ TheCoinChangeProblem::mDp(int i, int j)
 		else
 		{
 			uint64_t result = 0;
-			for (int k = j; k < m_coins.size(); k++)
+			for (int k = j; k < static_cast<int>(m_coins.size()); k++)
 			{
 				if (i - m_coins[k] >= 0)
 				{
