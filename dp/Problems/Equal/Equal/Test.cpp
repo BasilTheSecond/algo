@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 // 
 
@@ -19,6 +20,9 @@ private:
 Equal::Equal(const std::vector<int>& initialNumberOfChocolates):
 m_initialNumberOfChocolates(initialNumberOfChocolates)
 {
+	int max = *std::max_element(m_initialNumberOfChocolates.begin(), m_initialNumberOfChocolates.end());
+	std::vector<int> candidateSolution1;
+	candidateSolution1.assign(m_initialNumberOfChocolates.size(), max);
 }
 
 //
