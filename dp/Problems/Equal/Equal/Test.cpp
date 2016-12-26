@@ -16,7 +16,7 @@ private:
 
 //
 
-Equal::Equal(const std::vector<int>& initialNumberOfChocolates) :
+Equal::Equal(const std::vector<int>& initialNumberOfChocolates):
 m_initialNumberOfChocolates(initialNumberOfChocolates)
 {
 }
