@@ -9,7 +9,7 @@ class Equal
 public:
 	Equal(const std::vector<int>& initialNumberOfChocolates);
 	~Equal();
-	friend std::ostream& operator<<(std::ostream& os, Equal& equal);
+	friend std::ostream& operator<<(std::ostream& os, const Equal& equal);
 
 private:
 	std::vector<int> m_initialNumberOfChocolates;
@@ -34,7 +34,7 @@ Equal::~Equal()
 //
 
 std::ostream& 
-operator<<(std::ostream& os, Equal& equal)
+operator<<(std::ostream& os, const Equal& equal)
 {
 	os << "[ ";
 	for (size_t i = 0; i < equal.m_initialNumberOfChocolates.size(); i++)
