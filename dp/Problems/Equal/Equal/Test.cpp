@@ -71,7 +71,6 @@ Equal::mVectorToString(const std::vector<int>& v)
 int 
 Equal::mDp(const std::vector<int>& numberOfChocolates)
 {
-	//m_dp[mVectorToString(m_initialNumberOfChocolates)] = 0;
 	return 0;
 }
 
