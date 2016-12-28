@@ -23,9 +23,14 @@ private:
 
 Equal::Equal(const std::vector<int>& initialDistribution) :
 m_initialDistribution(initialDistribution),
-m_minNumberOfSteps(-1)
+m_minNumberOfSteps(0)
 {
-	//int min = *std::min_element(m_initialDistribution.begin(), m_initialDistribution.end());
+	int minElement = *std::min_element(m_initialDistribution.begin(), m_initialDistribution.end());
+	std::vector<int> delta;
+	for (int i = 0; i < initialDistribution.size(); i++)
+	{
+		delta.push_back(initialDistribution[i] - minElement);
+	}
 }
 
 //
