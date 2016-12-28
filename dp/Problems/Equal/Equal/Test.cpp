@@ -147,14 +147,38 @@ main()
 	Equal equal0({ 2, 2, 2, 2, 2, 2 });
 	std::cout << equal0 << std::endl;
 	std::cout << "min number of steps: " << equal0.mGetMinNumberOfSteps() << std::endl;
+	if (equal0.mGetMinNumberOfSteps() == 0)
+	{
+		std::cout << "PASS" << std::endl;
+	}
+	else
+	{
+		std::cout << "FAIL" << std::endl;
+	}
 	std::cout << "Test 1" << std::endl;
 	Equal equal1({ 2, 1 });
 	std::cout << equal1 << std::endl;
 	std::cout << "min number of steps: " << equal1.mGetMinNumberOfSteps() << std::endl;
+	if (equal1.mGetMinNumberOfSteps() == 1)
+	{
+		std::cout << "PASS" << std::endl;
+	}
+	else
+	{
+		std::cout << "FAIL" << std::endl;
+	}
 	std::cout << "Test 2" << std::endl;
 	Equal equal2({ 2, 2, 3, 7 });
 	std::cout << equal2 << std::endl;
 	std::cout << "min number of steps: " << equal2.mGetMinNumberOfSteps() << std::endl;
+	if (equal2.mGetMinNumberOfSteps() == 2)
+	{
+		std::cout << "PASS" << std::endl;
+	}
+	else
+	{
+		std::cout << "FAIL" << std::endl;
+	}
 	getchar();
 	return 0;
 }
