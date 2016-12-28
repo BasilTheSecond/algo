@@ -16,11 +16,12 @@ public:
 
 private:
 	std::string mVectorToString(const std::vector<int>& v);
+	std::string mGetHash(const std::vector<int>& v, int exception, int decrement);
 	double mDp(std::vector<int> distribution, int exception, int decrement);
 
 private:
 	std::vector<int> m_initialDistribution;
-	std::unordered_map<std::string, int> m_dp;
+	std::unordered_map<std::string, double> m_dp;
 	int m_minNumberOfSteps;
 };
 
@@ -76,6 +77,16 @@ operator<<(std::ostream& os, Equal& equal)
 
 //
 
+std::string 
+Equal::mGetHash(const std::vector<int>& v, int exception, int decrement)
+{
+	std::stringstream ss;
+	ss << mVectorToString(v) << "[ " << exception << "]" << "[ " << decrement << "]";
+	return ss.str();
+}
+
+//
+
 std::string
 Equal::mVectorToString(const std::vector<int>& v)
 {
@@ -94,40 +105,49 @@ Equal::mVectorToString(const std::vector<int>& v)
 double
 Equal::mDp(std::vector<int> distribution, int exception, int decrement)
 {
-	for (size_t i = 0; i < distribution.size(); i++)
+	std::string hash = mGetHash(distribution, exception, decrement);
+	if (m_dp.find(hash) == m_dp.end())
 	{
-		if (i != exception)
+		for (size_t i = 0; i < distribution.size(); i++)
 		{
-			distribution[i] -= decrement;
-			if (distribution[i] < m_initialDistribution[i])
+			if (i != exception)
 			{
-				return std::numeric_limits<double>::max();
+				distribution[i] -= decrement;
+				if (distribution[i] < m_initialDistribution[i])
+				{
+					m_dp[hash] = std::numeric_limits<double>::max();
+					break;
+				}
 			}
 		}
+		if (distribution == m_initialDistribution)
+		{
+			m_dp[hash] = 1;
+		}
+		else if (m_dp.find(hash) == m_dp.end())
+		{
+			std::vector<double> r;
+			for (int i = 0; i < distribution.size(); i++)
+			{
+				r.push_back(mDp(distribution, i, 1));
+			}
+			for (int i = 0; i < distribution.size(); i++)
+			{
+				r.push_back(mDp(distribution, i, 2));
+			}
+			for (int i = 0; i < distribution.size(); i++)
+			{
+				r.push_back(mDp(distribution, i, 5));
+			}
+			double result = *std::min_element(r.begin(), r.end());
+			if (result != std::numeric_limits<double>::max())
+			{
+				result++;
+			}
+			m_dp[hash] = result;
+		}
 	}
-	if (distribution == m_initialDistribution)
-	{
-		return 1;
-	}
-	std::vector<double> r;
-	for (int i = 0; i < distribution.size(); i++)
-	{
-		r.push_back(mDp(distribution, i, 1));
-	}
-	for (int i = 0; i < distribution.size(); i++)
-	{
-		r.push_back(mDp(distribution, i, 2));
-	}
-	for (int i = 0; i < distribution.size(); i++)
-	{
-		r.push_back(mDp(distribution, i, 5));
-	}
-	double result = *std::min_element(r.begin(), r.end());
-	if (result != std::numeric_limits<double>::max())
-	{
-		result++;
-	}
-	return result;
+	return m_dp[hash];
 }
 
 //
