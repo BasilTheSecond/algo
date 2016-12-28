@@ -16,7 +16,7 @@ public:
 
 private:
 	std::string mVectorToString(const std::vector<int>& v);
-	int mDp(const std::vector<int>& numberOfChocolates);
+	double mDp(std::vector<int> numberOfChocolates, int exception, int decrement);
 
 private:
 	std::vector<int> m_initialNumberOfChocolates;
@@ -33,7 +33,7 @@ m_minNumberOfSteps(0)
 	int max = *std::max_element(m_initialNumberOfChocolates.begin(), m_initialNumberOfChocolates.end());
 	std::vector<int> candidateSolution1;
 	candidateSolution1.assign(m_initialNumberOfChocolates.size(), max);
-	int minNumberOfSteps = mDp(candidateSolution1);
+	double minNumberOfSteps = mDp(candidateSolution1, 0, 1);
 }
 
 //
@@ -68,8 +68,8 @@ Equal::mVectorToString(const std::vector<int>& v)
 
 //
 
-int 
-Equal::mDp(const std::vector<int>& numberOfChocolates)
+double
+Equal::mDp(std::vector<int> numberOfChocolates, int exception, int decrement)
 {
 	return 0;
 }
