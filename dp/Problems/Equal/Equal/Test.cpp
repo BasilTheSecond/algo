@@ -112,17 +112,21 @@ Equal::mDp(std::vector<int> distribution, int exception, int decrement)
 	std::vector<double> r;
 	for (int i = 0; i < distribution.size(); i++)
 	{
-		r.push_back(mDp(distribution, i, 1) + 1);
+		r.push_back(mDp(distribution, i, 1));
 	}
 	for (int i = 0; i < distribution.size(); i++)
 	{
-		r.push_back(mDp(distribution, i, 2) + 1);
+		r.push_back(mDp(distribution, i, 2));
 	}
 	for (int i = 0; i < distribution.size(); i++)
 	{
-		r.push_back(mDp(distribution, i, 5) + 1);
+		r.push_back(mDp(distribution, i, 5));
 	}
 	double result = *std::min_element(r.begin(), r.end());
+	if (result != std::numeric_limits<double>::max())
+	{
+		result++;
+	}
 	return result;
 }
 
@@ -175,6 +179,18 @@ main()
 	{
 		std::cout << "FAIL" << std::endl;
 	}
+	//std::cout << "Test 3" << std::endl;
+	//Equal equal3({ 53, 361, 188, 665, 786, 898, 447, 562, 272, 123, 229, 629, 670, 848, 994, 54, 822, 46, 208, 17, 449, 302, 466, 832, 931, 778, 156, 39, 31, 777, 749, 436, 138, 289, 453, 276, 539, 901, 839, 811, 24, 420, 440, 46, 269, 786, 101, 443, 832, 661, 460, 281, 964, 278, 465, 247, 408, 622, 638, 440, 751, 739, 876, 889, 380, 330, 517, 919, 583, 356, 83, 959, 129, 875, 5, 750, 662, 106, 193, 494, 120, 653, 128, 84, 283, 593, 683, 44, 567, 321, 484, 318, 412, 712, 559, 792, 394, 77, 711, 977, 785, 146, 936, 914, 22, 942, 664, 36, 400, 857 });
+	//std::cout << equal3 << std::endl;
+	//std::cout << "min number of steps: " << equal3.mGetMinNumberOfSteps() << std::endl;
+	//if (equal3.mGetMinNumberOfSteps() == 10605)
+	//{
+	//	std::cout << "PASS" << std::endl;
+	//}
+	//else
+	//{
+	//	std::cout << "FAIL" << std::endl;
+	//}
 	getchar();
 	return 0;
 }
