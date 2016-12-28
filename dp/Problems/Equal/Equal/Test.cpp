@@ -28,7 +28,7 @@ private:
 
 Equal::Equal(const std::vector<int>& initialDistribution) :
 m_initialDistribution(initialDistribution),
-m_minNumberOfSteps(0)
+m_minNumberOfSteps(-1)
 {
 	int max = *std::max_element(m_initialDistribution.begin(), m_initialDistribution.end());
 	std::vector<int> candidate;
@@ -38,28 +38,29 @@ m_minNumberOfSteps(0)
 		m_minNumberOfSteps = 0;
 		return;
 	}
-	std::vector<double> r;
-	for (int i = 0; i < candidate.size(); i++)
+	double result = std::numeric_limits<double>::max();
+	for (int j = 0; result == std::numeric_limits<double>::max(); j++)
 	{
-		r.push_back(mDp(candidate, i, 1));
+		for (int i = 0; i < candidate.size(); i++)
+		{
+			candidate[i] += j;
+		}
+		std::vector<double> r;
+		for (int i = 0; i < candidate.size(); i++)
+		{
+			r.push_back(mDp(candidate, i, 1));
+		}
+		for (int i = 0; i < candidate.size(); i++)
+		{
+			r.push_back(mDp(candidate, i, 2));
+		}
+		for (int i = 0; i < candidate.size(); i++)
+		{
+			r.push_back(mDp(candidate, i, 5));
+		}
+		result = *std::min_element(r.begin(), r.end());
 	}
-	for (int i = 0; i < candidate.size(); i++)
-	{
-		r.push_back(mDp(candidate, i, 2));
-	}
-	for (int i = 0; i < candidate.size(); i++)
-	{
-		r.push_back(mDp(candidate, i, 5));
-	}
-	double result = *std::min_element(r.begin(), r.end());
-	if (result == std::numeric_limits<double>::max())
-	{
-		m_minNumberOfSteps = -1;
-	}
-	else
-	{
-		m_minNumberOfSteps = static_cast<int>(result);
-	}
+	m_minNumberOfSteps = static_cast<int>(result);
 }
 
 //
