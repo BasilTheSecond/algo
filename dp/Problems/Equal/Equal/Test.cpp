@@ -2,41 +2,42 @@
 #include <iostream>
 #include <algorithm>
 #include <sstream>
+#include <cstdint>
 
 // 
 
 class Equal
 {
 public:
-	Equal(const std::vector<__int64>& initialDistribution);
+	Equal(const std::vector<int64_t>& initialDistribution);
 	~Equal();
 	friend std::ostream& operator<<(std::ostream& os, const Equal& equal);
-	__int64 mGetMinNumberOfSteps() const;
+	int64_t mGetMinNumberOfSteps() const;
 
 private:
-	std::vector<__int64> m_initialDistribution;
-	__int64 m_minNumberOfSteps;
+	std::vector<int64_t> m_initialDistribution;
+	int64_t m_minNumberOfSteps;
 };
 
 //
 
-Equal::Equal(const std::vector<__int64>& initialDistribution) :
+Equal::Equal(const std::vector<int64_t>& initialDistribution) :
 m_initialDistribution(initialDistribution),
 m_minNumberOfSteps(0)
 {
-	__int64 minElement = *std::min_element(m_initialDistribution.begin(), m_initialDistribution.end());
-	std::vector<__int64> delta;
+	int64_t minElement = *std::min_element(m_initialDistribution.begin(), m_initialDistribution.end());
+	std::vector<int64_t> delta;
 	for (int i = 0; i < initialDistribution.size(); i++)
 	{
 		delta.push_back(initialDistribution[i] - minElement);
 	}
-	std::vector<__int64> zero;
+	std::vector<int64_t> zero;
 	zero.assign(delta.size(), 0);
 	for (m_minNumberOfSteps = 0; delta != zero; m_minNumberOfSteps++)
 	{
-		std::vector<__int64>::iterator it = std::max_element(delta.begin(), delta.end());
-		__int64 maxArg = it - delta.begin();
-		__int64 dec;
+		std::vector<int64_t>::iterator it = std::max_element(delta.begin(), delta.end());
+		int64_t maxArg = it - delta.begin();
+		int64_t dec;
 		if (*it >= 5)
 		{
 			dec = 5;
@@ -76,7 +77,7 @@ operator<<(std::ostream& os, const Equal& equal)
 
 //
 
-__int64
+int64_t
 Equal::mGetMinNumberOfSteps() const
 {
 	return m_minNumberOfSteps;
@@ -181,6 +182,19 @@ main()
 	std::cout << equal7 << std::endl;
 	std::cout << "min number of steps: " << equal7.mGetMinNumberOfSteps() << std::endl;
 	if (equal7.mGetMinNumberOfSteps() == 5104)
+	{
+		std::cout << "PASS" << std::endl;
+	}
+	else
+	{
+		std::cout << "FAIL" << std::endl;
+	}
+	// TestCase #12 from: https://www.hackerrank.com/challenges/equal
+	std::cout << "Test TestCase #12" << std::endl;
+	Equal equalTestCaseNumber12({ 1, 5, 5, 10, 10 });
+	std::cout << equalTestCaseNumber12 << std::endl;
+	std::cout << "min number of steps: " << equalTestCaseNumber12.mGetMinNumberOfSteps() << std::endl;
+	if (equalTestCaseNumber12.mGetMinNumberOfSteps() == 7)
 	{
 		std::cout << "PASS" << std::endl;
 	}
