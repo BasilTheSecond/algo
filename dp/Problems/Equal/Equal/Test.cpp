@@ -189,12 +189,38 @@ main()
 	{
 		std::cout << "FAIL" << std::endl;
 	}
+	// TestCase #11 from: https://www.hackerrank.com/challenges/equal
+	std::cout << "Test TestCase #11" << std::endl;
+	Equal equalTestCaseNumber11({ 2, 2, 3, 7 });
+	std::cout << equalTestCaseNumber11 << std::endl;
+	std::cout << "min number of steps: " << equalTestCaseNumber11.mGetMinNumberOfSteps() << std::endl;
+	if (equalTestCaseNumber11.mGetMinNumberOfSteps() == 2)
+	{
+		std::cout << "PASS" << std::endl;
+	}
+	else
+	{
+		std::cout << "FAIL" << std::endl;
+	}
 	// TestCase #12 from: https://www.hackerrank.com/challenges/equal
 	std::cout << "Test TestCase #12" << std::endl;
 	Equal equalTestCaseNumber12({ 1, 5, 5, 10, 10 });
 	std::cout << equalTestCaseNumber12 << std::endl;
 	std::cout << "min number of steps: " << equalTestCaseNumber12.mGetMinNumberOfSteps() << std::endl;
 	if (equalTestCaseNumber12.mGetMinNumberOfSteps() == 7)
+	{
+		std::cout << "PASS" << std::endl;
+	}
+	else
+	{
+		std::cout << "FAIL" << std::endl;
+	}
+	// TestCase #13 from: https://www.hackerrank.com/challenges/equal
+	std::cout << "Test TestCase #13" << std::endl;
+	Equal equalTestCaseNumber13({ 2, 5, 5, 5, 5, 5 });
+	std::cout << equalTestCaseNumber13 << std::endl;
+	std::cout << "min number of steps: " << equalTestCaseNumber13.mGetMinNumberOfSteps() << std::endl;
+	if (equalTestCaseNumber13.mGetMinNumberOfSteps() == 6)
 	{
 		std::cout << "PASS" << std::endl;
 	}
