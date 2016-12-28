@@ -1,7 +1,6 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include <unordered_map>
 #include <sstream>
 
 // 
@@ -9,27 +8,48 @@
 class Equal
 {
 public:
-	Equal(const std::vector<int>& initialDistribution);
+	Equal(const std::vector<__int64>& initialDistribution);
 	~Equal();
 	friend std::ostream& operator<<(std::ostream& os, const Equal& equal);
-	int mGetMinNumberOfSteps() const;
+	__int64 mGetMinNumberOfSteps() const;
 
 private:
-	std::vector<int> m_initialDistribution;
-	int m_minNumberOfSteps;
+	std::vector<__int64> m_initialDistribution;
+	__int64 m_minNumberOfSteps;
 };
 
 //
 
-Equal::Equal(const std::vector<int>& initialDistribution) :
+Equal::Equal(const std::vector<__int64>& initialDistribution) :
 m_initialDistribution(initialDistribution),
 m_minNumberOfSteps(0)
 {
-	int minElement = *std::min_element(m_initialDistribution.begin(), m_initialDistribution.end());
-	std::vector<int> delta;
+	__int64 minElement = *std::min_element(m_initialDistribution.begin(), m_initialDistribution.end());
+	std::vector<__int64> delta;
 	for (int i = 0; i < initialDistribution.size(); i++)
 	{
 		delta.push_back(initialDistribution[i] - minElement);
+	}
+	std::vector<__int64> zero;
+	zero.assign(delta.size(), 0);
+	for (m_minNumberOfSteps = 0; delta != zero; m_minNumberOfSteps++)
+	{
+		std::vector<__int64>::iterator it = std::max_element(delta.begin(), delta.end());
+		__int64 maxArg = it - delta.begin();
+		__int64 dec;
+		if (*it >= 5)
+		{
+			dec = 5;
+		}
+		else if (*it >= 2)
+		{
+			dec = 2;
+		}
+		else
+		{
+			dec = 1;
+		}
+		delta[maxArg] -= (*it >= 5 ? 5 : (*it >= 2 ? 2 : 1));
 	}
 }
 
@@ -56,7 +76,7 @@ operator<<(std::ostream& os, const Equal& equal)
 
 //
 
-int 
+__int64
 Equal::mGetMinNumberOfSteps() const
 {
 	return m_minNumberOfSteps;
