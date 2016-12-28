@@ -190,6 +190,9 @@ main()
 		std::cout << "FAIL" << std::endl;
 	}
 	// TestCase #11 from: https://www.hackerrank.com/challenges/equal
+	// 1
+	// 4
+	// 2 2 3 7
 	std::cout << "Test TestCase #11" << std::endl;
 	Equal equalTestCaseNumber11({ 2, 2, 3, 7 });
 	std::cout << equalTestCaseNumber11 << std::endl;
@@ -203,6 +206,9 @@ main()
 		std::cout << "FAIL" << std::endl;
 	}
 	// TestCase #12 from: https://www.hackerrank.com/challenges/equal
+	// 1
+	// 5
+	// 1 5 5 10 10
 	std::cout << "Test TestCase #12" << std::endl;
 	Equal equalTestCaseNumber12({ 1, 5, 5, 10, 10 });
 	std::cout << equalTestCaseNumber12 << std::endl;
@@ -216,6 +222,9 @@ main()
 		std::cout << "FAIL" << std::endl;
 	}
 	// TestCase #13 from: https://www.hackerrank.com/challenges/equal
+	// 1
+	// 6
+	// 2 5 5 5 5 5
 	std::cout << "Test TestCase #13" << std::endl;
 	Equal equalTestCaseNumber13({ 2, 5, 5, 5, 5, 5 });
 	std::cout << equalTestCaseNumber13 << std::endl;
