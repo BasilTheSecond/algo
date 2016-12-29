@@ -1,7 +1,6 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
-#include <sstream>
 #include <cstdint>
 
 // 
@@ -63,13 +62,12 @@ Equal::~Equal()
 std::ostream& 
 operator<<(std::ostream& os, const Equal& equal)
 {
-	std::stringstream ss;
-	ss << "[ ";
+	os << "[ ";
 	for (size_t i = 0; i < equal.m_initialDistribution.size(); i++)
 	{
-		ss << equal.m_initialDistribution[i] << " ";
+		os << equal.m_initialDistribution[i] << " ";
 	}
-	ss << "]";
+	os << "]";
 	return os;
 }
 
@@ -180,6 +178,18 @@ main()
 	std::cout << equal7 << std::endl;
 	std::cout << "min number of steps: " << equal7.mGetMinNumberOfSteps() << std::endl;
 	if (equal7.mGetMinNumberOfSteps() == 5104)
+	{
+		std::cout << "PASS" << std::endl;
+	}
+	else
+	{
+		std::cout << "FAIL" << std::endl;
+	}
+	std::cout << "Test 8" << std::endl;
+	Equal equal8({ 1, 5, 5 });
+	std::cout << equal8 << std::endl;
+	std::cout << "min number of steps: " << equal8.mGetMinNumberOfSteps() << std::endl;
+	if (equal8.mGetMinNumberOfSteps() == 3)
 	{
 		std::cout << "PASS" << std::endl;
 	}
