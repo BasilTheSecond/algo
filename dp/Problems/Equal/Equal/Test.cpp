@@ -26,32 +26,78 @@ m_initialDistribution(initialDistribution),
 m_minNumberOfSteps(0)
 {
 	int64_t minElement = *std::min_element(m_initialDistribution.begin(), m_initialDistribution.end());
-	std::vector<int64_t> delta;
-	for (int i = 0; i < initialDistribution.size(); i++)
+	std::vector<int64_t> result;
+	if (minElement >= 4)
 	{
-		delta.push_back(initialDistribution[i] - minElement);
+		int64_t base = minElement - 4;
+		int64_t ops = 0;
+		for (int i = 0; i < m_initialDistribution.size(); i++)
+		{
+			int64_t delta = m_initialDistribution[i] - base;
+			int64_t a = delta / 5;
+			int64_t b = (delta % 5) / 2;
+			int64_t c = ((delta % 5) % 2) / 1;
+			ops += (a + b + c);
+		}
+		result.push_back(ops);
 	}
-	std::vector<int64_t> zero;
-	zero.assign(delta.size(), 0);
-	for (m_minNumberOfSteps = 0; delta != zero; m_minNumberOfSteps++)
+	if (minElement >= 3)
 	{
-		std::vector<int64_t>::iterator it = std::max_element(delta.begin(), delta.end());
-		int64_t maxArg = it - delta.begin();
-		int64_t dec;
-		if (*it >= 5)
+		int64_t base = minElement - 3;
+		int64_t ops = 0;
+		for (int i = 0; i < m_initialDistribution.size(); i++)
 		{
-			dec = 5;
+			int64_t delta = m_initialDistribution[i] - base;
+			int64_t a = delta / 5;
+			int64_t b = (delta % 5) / 2;
+			int64_t c = ((delta % 5) % 2) / 1;
+			ops += (a + b + c);
 		}
-		else if (*it >= 2)
-		{
-			dec = 2;
-		}
-		else
-		{
-			dec = 1;
-		}
-		delta[maxArg] -= (*it >= 5 ? 5 : (*it >= 2 ? 2 : 1));
+		result.push_back(ops);
 	}
+	if (minElement >= 2)
+	{
+		int64_t base = minElement - 2;
+		int64_t ops = 0;
+		for (int i = 0; i < m_initialDistribution.size(); i++)
+		{
+			int64_t delta = m_initialDistribution[i] - base;
+			int64_t a = delta / 5;
+			int64_t b = (delta % 5) / 2;
+			int64_t c = ((delta % 5) % 2) / 1;
+			ops += (a + b + c);
+		}
+		result.push_back(ops);
+	}
+	if (minElement >= 1)
+	{
+		int64_t base = minElement - 1;
+		int64_t ops = 0;
+		for (int i = 0; i < m_initialDistribution.size(); i++)
+		{
+			int64_t delta = m_initialDistribution[i] - base;
+			int64_t a = delta / 5;
+			int64_t b = (delta % 5) / 2;
+			int64_t c = ((delta % 5) % 2) / 1;
+			ops += (a + b + c);
+		}
+		result.push_back(ops);
+	}
+	if (minElement >= 0)
+	{
+		int64_t base = minElement;
+		int64_t ops = 0;
+		for (int i = 0; i < m_initialDistribution.size(); i++)
+		{
+			int64_t delta = m_initialDistribution[i] - base;
+			int64_t a = delta / 5;
+			int64_t b = (delta % 5) / 2;
+			int64_t c = ((delta % 5) % 2) / 1;
+			ops += (a + b + c);
+		}
+		result.push_back(ops);
+	}
+	m_minNumberOfSteps = *std::min_element(result.begin(), result.end());
 }
 
 //
