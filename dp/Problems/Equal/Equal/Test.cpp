@@ -28,29 +28,8 @@ m_minNumberOfSteps(0)
 {
 	int64_t minElement = *std::min_element(m_initialDistribution.begin(), m_initialDistribution.end());
 	std::vector<int64_t> result;
-	if (minElement >= 4)
+	for (int64_t base = minElement; base >= minElement - 4 && base >= 0; base--)
 	{
-		int64_t base = minElement - 4;
-		result.push_back(mGetNumberOfSteps(base));
-	}
-	if (minElement >= 3)
-	{
-		int64_t base = minElement - 3;
-		result.push_back(mGetNumberOfSteps(base));
-	}
-	if (minElement >= 2)
-	{
-		int64_t base = minElement - 2;
-		result.push_back(mGetNumberOfSteps(base));
-	}
-	if (minElement >= 1)
-	{
-		int64_t base = minElement - 1;
-		result.push_back(mGetNumberOfSteps(base));
-	}
-	if (minElement >= 0)
-	{
-		int64_t base = minElement;
 		result.push_back(mGetNumberOfSteps(base));
 	}
 	m_minNumberOfSteps = *std::min_element(result.begin(), result.end());
