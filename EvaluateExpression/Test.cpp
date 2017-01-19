@@ -24,7 +24,7 @@ m_expression(expression)
 int 
 EvaluateExpression::mGetResult()
 {
-	return 0;
+	return -10000000;
 }
 
 class EvaluateExpressionTest
@@ -73,6 +73,12 @@ main()
 	EvaluateExpressionTest evaluateExpressionTest1(testName1, expression1, result1);
 	EvaluateExpression evaluateExpression1(expression1);
 	evaluateExpressionTest1.mAssert(evaluateExpression1.mGetResult());
+	std::string testName2("Test 2");
+	std::string expression2("1 + 2 - 3");
+	int result2 = 0;
+	EvaluateExpressionTest evaluateExpressionTest2(testName2, expression2, result2);
+	EvaluateExpression evaluateExpression2(expression2);
+	evaluateExpressionTest2.mAssert(evaluateExpression2.mGetResult());
 	getchar();
   return 0;
 }
