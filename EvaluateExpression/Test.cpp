@@ -21,11 +21,11 @@ public:
 
 //
 
-class Operations : std::stack<std::string>
+class StringStack : std::stack<std::string>
 {
 public:
-	Operations();
-	virtual ~Operations();
+	StringStack();
+	virtual ~StringStack();
 	void mPush(const std::string& operation);
 	std::string mPop();
 	int mSize();
@@ -33,11 +33,11 @@ public:
 
 //
 
-class Operands : std::stack<int>
+class IntegerStack : std::stack<int>
 {
 public:
-	Operands();
-	virtual ~Operands();
+	IntegerStack();
+	virtual ~IntegerStack();
 	void mPush(int operand);
 	int mPop();
 	int mSize();
@@ -50,6 +50,10 @@ class EvaluateExpression
 public:
 	EvaluateExpression(const std::string& expression);
 	int mGetResult();
+
+private:
+	void mTokenizeExpression();
+	void mRemoveBrackets();
 
 private:
 	class EvaluateExpressionNoBrackets
@@ -65,15 +69,12 @@ private:
 
 	private:
 		std::vector<Token> m_tokens;
-		Operands m_operands;
-		Operations m_operations;
-		Operands m_tempOperands;
-		Operations m_tempOperations;
+		IntegerStack m_operands;
+		StringStack m_operations;
+		IntegerStack m_tempOperands;
+		StringStack m_tempOperations;
 		int m_result;
 	};
-
-private:
-	void mTokenizeExpression();
 
 private:
 	std::string m_expression;
@@ -83,21 +84,21 @@ private:
 
 //
 
-Operations::Operations() :
+StringStack::StringStack() :
 std::stack<std::string>()
 {
 }
 
 //
 
-Operations::~Operations()
+StringStack::~StringStack()
 {
 }
 
 //
 
 void 
-Operations::mPush(const std::string& operation)
+StringStack::mPush(const std::string& operation)
 {
 	push(operation);
 }
@@ -105,7 +106,7 @@ Operations::mPush(const std::string& operation)
 //
 
 std::string 
-Operations::mPop()
+StringStack::mPop()
 {
 	std::string operation = top();
 	pop();
@@ -115,28 +116,28 @@ Operations::mPop()
 //
 
 int
-Operations::mSize()
+StringStack::mSize()
 {
 	return static_cast<int>(size());
 }
 
 //
 
-Operands::Operands() :
+IntegerStack::IntegerStack() :
 std::stack<int>()
 {
 }
 
 //
 
-Operands::~Operands()
+IntegerStack::~IntegerStack()
 {
 }
 
 //
 
 void
-Operands::mPush(int operand)
+IntegerStack::mPush(int operand)
 {
 	push(operand);
 }
@@ -144,7 +145,7 @@ Operands::mPush(int operand)
 //
 
 int
-Operands::mPop()
+IntegerStack::mPop()
 {
 	int operand = top();
 	pop();
@@ -154,7 +155,7 @@ Operands::mPop()
 //
 
 int
-Operands::mSize()
+IntegerStack::mSize()
 {
 	return static_cast<int>(size());
 }
@@ -174,6 +175,7 @@ m_expression(expression),
 m_result(-10000)
 {
 	mTokenizeExpression();
+	mRemoveBrackets();
 	EvaluateExpressionNoBrackets evaluateExpressionNoBrackets(m_tokens);
 	m_result = evaluateExpressionNoBrackets.mGetResult();
 }
@@ -213,6 +215,13 @@ int
 EvaluateExpression::mGetResult()
 {
 	return m_result;
+}
+
+//
+
+void 
+EvaluateExpression::mRemoveBrackets()
+{
 }
 
 //
