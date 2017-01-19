@@ -21,6 +21,30 @@ public:
 
 //
 
+class Operations : std::stack<std::string>
+{
+public:
+	Operations();
+	virtual ~Operations();
+	void mPush(const std::string& operation);
+	std::string mPop();
+	int mSize();
+};
+
+//
+
+class Operands : std::stack<int>
+{
+public:
+	Operands();
+	virtual ~Operands();
+	void mPush(int operand);
+	int mPop();
+	int mSize();
+};
+
+//
+
 class EvaluateExpression
 {
 public:
@@ -33,9 +57,88 @@ private:
 private:
 	std::string m_expression;
 	std::vector<Token> m_tokens;
-	std::stack<int> m_operands;
-	std::stack<std::string> m_operations;
+	Operands m_operands;
+	Operations m_operations;
 };
+
+
+//
+
+Operations::Operations() :
+std::stack<std::string>()
+{
+}
+
+//
+
+Operations::~Operations()
+{
+}
+
+//
+
+void 
+Operations::mPush(const std::string& operation)
+{
+	push(operation);
+}
+
+//
+
+std::string 
+Operations::mPop()
+{
+	std::string operation = top();
+	pop();
+	return operation;
+}
+
+//
+
+int
+Operations::mSize()
+{
+	return static_cast<int>(size());
+}
+
+//
+
+Operands::Operands() :
+std::stack<int>()
+{
+}
+
+//
+
+Operands::~Operands()
+{
+}
+
+//
+
+void
+Operands::mPush(int operand)
+{
+	push(operand);
+}
+
+//
+
+int
+Operands::mPop()
+{
+	int operand = top();
+	pop();
+	return operand;
+}
+
+//
+
+int
+Operands::mSize()
+{
+	return static_cast<int>(size());
+}
 
 //
 
@@ -56,23 +159,13 @@ m_expression(expression)
 		Token& t = m_tokens[i];
 		if (t.m_name == "OPERATOR")
 		{
-			m_operations.push(t.m_value);
+			m_operations.mPush(t.m_value);
 		}
 		else
 		{
-			m_operands.push(std::stoi(t.m_value));
+			m_operands.mPush(std::stoi(t.m_value));
 		}
 	}
-	//while (m_operands.size() > 0)
-	//{
-	//	std::cout << m_operands.top() << std::endl;
-	//	m_operands.pop();
-	//}
-	//while (m_operations.size() > 0)
-	//{
-	//	std::cout << m_operations.top() << std::endl;
-	//	m_operations.pop();
-	//}
 }
 
 //
