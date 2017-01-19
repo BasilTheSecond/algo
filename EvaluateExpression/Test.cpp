@@ -5,6 +5,19 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <stack>
+
+//
+
+class Token
+{
+public:
+	Token(const std::string& name, const std::string& value);
+
+public:
+	std::string m_name;
+	std::string m_value;
+};
 
 //
 
@@ -19,8 +32,18 @@ private:
 
 private:
 	std::string m_expression;
-	std::vector<std::string> m_tokens;
+	std::vector<Token> m_tokens;
+	std::stack<int> m_operands;
+	std::stack<std::string> m_operations;
 };
+
+//
+
+Token::Token(const std::string& name, const std::string& value) :
+m_name(name),
+m_value(value)
+{
+}
 
 //
 
@@ -28,6 +51,11 @@ EvaluateExpression::EvaluateExpression(const std::string& expression) :
 m_expression(expression)
 {
 	mTokenizeExpression();
+	//for (Token t : m_tokens)
+	//{
+	//	std::cout << t.m_name << "," << t.m_value << " ";
+	//}
+	//std::cout << std::endl;
 }
 
 //
@@ -36,11 +64,19 @@ void
 EvaluateExpression::mTokenizeExpression()
 {
 	std::stringstream ss(m_expression);
-	while (!ss.fail())
+	while (!ss.eof())
 	{
-		std::string token;
-		ss >> token;
-		m_tokens.push_back(token);
+		std::string s;
+		ss >> s;
+		//std::cout << "[" << s << "]" << std::endl;
+		if (s == "/" || s == "*" || s == "+" || s == "-")
+		{
+			m_tokens.push_back(Token("OPERATOR", s));
+		}
+		else
+		{
+			m_tokens.push_back(Token("OPERAND", s));
+		}
 	}
 }
 
