@@ -52,18 +52,32 @@ public:
 	int mGetResult();
 
 private:
+	class EvaluateExpressionNoBrackets
+	{
+	public:
+		EvaluateExpressionNoBrackets(const std::vector<Token>& tokens);
+		int mGetResult();
+
+	private:
+		void mInitialize();
+		void mEvaluateInOrderOfPrecedence();
+		void mEvaluateOperation(const std::string& operation);
+
+	private:
+		std::vector<Token> m_tokens;
+		Operands m_operands;
+		Operations m_operations;
+		Operands m_tempOperands;
+		Operations m_tempOperations;
+		int m_result;
+	};
+
+private:
 	void mTokenizeExpression();
-	void mInitialize();
-	void mEvaluateInOrderOfPrecedence();
-	void mEvaluateOperation(const std::string& operation);
 
 private:
 	std::string m_expression;
 	std::vector<Token> m_tokens;
-	Operands m_operands;
-	Operations m_operations;
-	Operands m_tempOperands;
-	Operations m_tempOperations;
 	int m_result;
 };
 
@@ -160,8 +174,8 @@ m_expression(expression),
 m_result(-10000)
 {
 	mTokenizeExpression();
-	mInitialize();
-	mEvaluateInOrderOfPrecedence();
+	EvaluateExpressionNoBrackets evaluateExpressionNoBrackets(m_tokens);
+	m_result = evaluateExpressionNoBrackets.mGetResult();
 }
 
 //
@@ -195,8 +209,26 @@ EvaluateExpression::mTokenizeExpression()
 
 //
 
+int
+EvaluateExpression::mGetResult()
+{
+	return m_result;
+}
+
+//
+
+EvaluateExpression::EvaluateExpressionNoBrackets::EvaluateExpressionNoBrackets(const std::vector<Token>& tokens) :
+m_tokens(tokens),
+m_result(-10000)
+{
+	mInitialize();
+	mEvaluateInOrderOfPrecedence();
+}
+
+//
+
 void 
-EvaluateExpression::mInitialize()
+EvaluateExpression::EvaluateExpressionNoBrackets::mInitialize()
 {
 	for (int i = static_cast<int>(m_tokens.size() - 1); i >= 0; i--)
 	{
@@ -214,8 +246,8 @@ EvaluateExpression::mInitialize()
 
 //
 
-int 
-EvaluateExpression::mGetResult()
+int
+EvaluateExpression::EvaluateExpressionNoBrackets::mGetResult()
 {
 	return m_result;
 }
@@ -223,7 +255,7 @@ EvaluateExpression::mGetResult()
 //
 
 void 
-EvaluateExpression::mEvaluateInOrderOfPrecedence()
+EvaluateExpression::EvaluateExpressionNoBrackets::mEvaluateInOrderOfPrecedence()
 {
 	mEvaluateOperation("/");
 	mEvaluateOperation("*");
@@ -235,7 +267,7 @@ EvaluateExpression::mEvaluateInOrderOfPrecedence()
 //
 
 void 
-EvaluateExpression::mEvaluateOperation(const std::string& operation)
+EvaluateExpression::EvaluateExpressionNoBrackets::mEvaluateOperation(const std::string& operation)
 {
 	while (m_operations.mSize() > 0)
 	{
