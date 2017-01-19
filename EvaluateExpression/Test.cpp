@@ -54,12 +54,16 @@ public:
 private:
 	void mTokenizeExpression();
 	void mInitialize();
+	void mEvaluateInOrderOfPrecedence();
+	void mEvaluateOperation(const std::string& operation);
 
 private:
 	std::string m_expression;
 	std::vector<Token> m_tokens;
 	Operands m_operands;
 	Operations m_operations;
+	Operands m_tempOperands;
+	Operations m_tempOperations;
 	int m_result;
 };
 
@@ -157,6 +161,7 @@ m_result(-10000)
 {
 	mTokenizeExpression();
 	mInitialize();
+	mEvaluateInOrderOfPrecedence();
 }
 
 //
@@ -206,6 +211,64 @@ int
 EvaluateExpression::mGetResult()
 {
 	return m_result;
+}
+
+//
+
+void 
+EvaluateExpression::mEvaluateInOrderOfPrecedence()
+{
+	mEvaluateOperation("/");
+	mEvaluateOperation("*");
+	mEvaluateOperation("+");
+	mEvaluateOperation("-");
+	m_result = m_operands.mPop();
+}
+
+//
+
+void 
+EvaluateExpression::mEvaluateOperation(const std::string& operation)
+{
+	while (m_operations.mSize() > 0)
+	{
+		std::string& o = m_operations.mPop();
+		int op1 = m_operands.mPop();
+		if (o == operation)
+		{
+			int op2 = m_operands.mPop();
+			int result;
+			if (o == "/")
+			{
+				result = op1 / op2;
+			}
+			else if (o == "*")
+			{
+				result = op1 * op2;
+			}
+			else if (o == "+")
+			{
+				result = op1 + op2;
+			}
+			else if (o == "-")
+			{
+				result = op1 - op2;
+			}
+			m_operands.mPush(result);
+		}
+		else
+		{
+			m_tempOperations.mPush(o);
+			m_tempOperands.mPush(op1);
+		}
+	}
+	while (m_tempOperations.mSize() > 0)
+	{
+		std::string& o = m_tempOperations.mPop();
+		int op = m_tempOperands.mPop();
+		m_operations.mPush(o);
+		m_operands.mPush(op);
+	}
 }
 
 //
