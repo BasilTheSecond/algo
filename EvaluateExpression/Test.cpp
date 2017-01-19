@@ -16,16 +16,22 @@ private:
 	std::string m_expression;
 };
 
+//
+
 EvaluateExpression::EvaluateExpression(const std::string& expression) :
 m_expression(expression)
 {
 }
+
+//
 
 int 
 EvaluateExpression::mGetResult()
 {
 	return -10000000;
 }
+
+//
 
 class EvaluateExpressionTest
 {
@@ -39,12 +45,16 @@ private:
 	int m_expectedResult;
 };
 
+//
+
 EvaluateExpressionTest::EvaluateExpressionTest(const std::string& testName, const std::string& expression, int expectedResult) :
 m_testName(testName),
 m_expression(expression),
 m_expectedResult(expectedResult)
 {
 }
+
+//
 
 void 
 EvaluateExpressionTest::mAssert(int result)
@@ -62,6 +72,8 @@ EvaluateExpressionTest::mAssert(int result)
 		std::cout << "FAIL" << std::endl;
 	}
 }
+
+//
 
 int 
 main()
