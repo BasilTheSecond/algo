@@ -178,6 +178,14 @@ EvaluateExpression::mTokenizeExpression()
 		{
 			m_tokens.push_back(Token("OPERATOR", s));
 		}
+		else if (s == "(")
+		{
+			m_tokens.push_back(Token("LBRACKET", s));
+		}
+		else if (s == ")")
+		{
+			m_tokens.push_back(Token("RBRACKET", s));
+		}
 		else
 		{
 			m_tokens.push_back(Token("OPERAND", s));
