@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
+#include <vector>
+#include <sstream>
 
 //
 
@@ -14,6 +16,7 @@ public:
 
 private:
 	std::string m_expression;
+	std::vector<std::string> m_tokens;
 };
 
 //
@@ -21,6 +24,13 @@ private:
 EvaluateExpression::EvaluateExpression(const std::string& expression) :
 m_expression(expression)
 {
+	std::stringstream ss(expression);
+	while (!ss.fail())
+	{
+		std::string token;
+		ss >> token;
+		m_tokens.push_back(token);
+	}
 }
 
 //
