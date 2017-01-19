@@ -53,6 +53,7 @@ public:
 
 private:
 	void mTokenizeExpression();
+	void mInitialize();
 
 private:
 	std::string m_expression;
@@ -155,18 +156,7 @@ m_expression(expression),
 m_result(-10000)
 {
 	mTokenizeExpression();
-	for (int i = static_cast<int>(m_tokens.size() - 1); i >= 0; i--)
-	{
-		Token& t = m_tokens[i];
-		if (t.m_name == "OPERATOR")
-		{
-			m_operations.mPush(t.m_value);
-		}
-		else
-		{
-			m_operands.mPush(std::stoi(t.m_value));
-		}
-	}
+	mInitialize();
 }
 
 //
@@ -187,6 +177,25 @@ EvaluateExpression::mTokenizeExpression()
 		else
 		{
 			m_tokens.push_back(Token("OPERAND", s));
+		}
+	}
+}
+
+//
+
+void 
+EvaluateExpression::mInitialize()
+{
+	for (int i = static_cast<int>(m_tokens.size() - 1); i >= 0; i--)
+	{
+		Token& t = m_tokens[i];
+		if (t.m_name == "OPERATOR")
+		{
+			m_operations.mPush(t.m_value);
+		}
+		else
+		{
+			m_operands.mPush(std::stoi(t.m_value));
 		}
 	}
 }
