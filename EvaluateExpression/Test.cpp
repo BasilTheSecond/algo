@@ -331,6 +331,12 @@ main()
 	EvaluateExpressionTest evaluateExpressionTest2(testName2, expression2, result2);
 	EvaluateExpression evaluateExpression2(expression2);
 	evaluateExpressionTest2.mAssert(evaluateExpression2.mGetResult());
+	std::string testName3("Test 3");
+	std::string expression3("1 + 2 * 4 / 5 + 6 - 7 / 2 * 3");
+	int result3 = -2;
+	EvaluateExpressionTest evaluateExpressionTest3(testName3, expression3, result3);
+	EvaluateExpression evaluateExpression3(expression3);
+	evaluateExpressionTest3.mAssert(evaluateExpression3.mGetResult());
 	getchar();
   return 0;
 }
