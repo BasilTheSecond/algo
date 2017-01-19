@@ -45,6 +45,18 @@ public:
 
 //
 
+class TokenStack : std::stack<Token>
+{
+public:
+	TokenStack();
+	virtual ~TokenStack();
+	void mPush(const Token& token);
+	Token mPop();
+	int mSize();
+};
+
+//
+
 class EvaluateExpression
 {
 public:
@@ -53,6 +65,7 @@ public:
 
 private:
 	void mTokenizeExpression();
+	void mInitialize();
 	void mRemoveBrackets();
 
 private:
@@ -79,6 +92,8 @@ private:
 private:
 	std::string m_expression;
 	std::vector<Token> m_tokens;
+	TokenStack m_tokenStack;
+	TokenStack m_tempTokenStack;
 	int m_result;
 };
 
@@ -162,6 +177,45 @@ IntegerStack::mSize()
 
 //
 
+TokenStack::TokenStack() :
+std::stack<Token>()
+{
+}
+
+//
+
+TokenStack::~TokenStack()
+{
+}
+
+//
+
+void
+TokenStack::mPush(const Token& token)
+{
+	push(token);
+}
+
+//
+
+Token
+TokenStack::mPop()
+{
+	Token& token = top();
+	pop();
+	return token;
+}
+
+//
+
+int
+TokenStack::mSize()
+{
+	return static_cast<int>(size());
+}
+
+//
+
 Token::Token(const std::string& name, const std::string& value) :
 m_name(name),
 m_value(value)
@@ -175,6 +229,7 @@ m_expression(expression),
 m_result(-10000)
 {
 	mTokenizeExpression();
+	mInitialize();
 	mRemoveBrackets();
 	EvaluateExpressionNoBrackets evaluateExpressionNoBrackets(m_tokens);
 	m_result = evaluateExpressionNoBrackets.mGetResult();
@@ -222,6 +277,18 @@ EvaluateExpression::mGetResult()
 void 
 EvaluateExpression::mRemoveBrackets()
 {
+}
+
+//
+
+void
+EvaluateExpression::mInitialize()
+{
+	for (int i = static_cast<int>(m_tokens.size() - 1); i >= 0; i--)
+	{
+		Token& t = m_tokens[i];
+		m_tokenStack.mPush(t);
+	}
 }
 
 //
