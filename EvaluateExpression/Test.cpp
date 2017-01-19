@@ -51,11 +51,28 @@ EvaluateExpression::EvaluateExpression(const std::string& expression) :
 m_expression(expression)
 {
 	mTokenizeExpression();
-	//for (Token t : m_tokens)
+	for (int i = static_cast<int>(m_tokens.size() - 1); i >= 0; i--)
+	{
+		Token& t = m_tokens[i];
+		if (t.m_name == "OPERATOR")
+		{
+			m_operations.push(t.m_value);
+		}
+		else
+		{
+			m_operands.push(std::stoi(t.m_value));
+		}
+	}
+	//while (m_operands.size() > 0)
 	//{
-	//	std::cout << t.m_name << "," << t.m_value << " ";
+	//	std::cout << m_operands.top() << std::endl;
+	//	m_operands.pop();
 	//}
-	//std::cout << std::endl;
+	//while (m_operations.size() > 0)
+	//{
+	//	std::cout << m_operations.top() << std::endl;
+	//	m_operations.pop();
+	//}
 }
 
 //
