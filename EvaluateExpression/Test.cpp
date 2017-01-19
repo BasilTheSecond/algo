@@ -59,8 +59,8 @@ private:
 	std::vector<Token> m_tokens;
 	Operands m_operands;
 	Operations m_operations;
+	int m_result;
 };
-
 
 //
 
@@ -151,7 +151,8 @@ m_value(value)
 //
 
 EvaluateExpression::EvaluateExpression(const std::string& expression) :
-m_expression(expression)
+m_expression(expression),
+m_result(-10000)
 {
 	mTokenizeExpression();
 	for (int i = static_cast<int>(m_tokens.size() - 1); i >= 0; i--)
@@ -195,7 +196,7 @@ EvaluateExpression::mTokenizeExpression()
 int 
 EvaluateExpression::mGetResult()
 {
-	return -10000000;
+	return m_result;
 }
 
 //
