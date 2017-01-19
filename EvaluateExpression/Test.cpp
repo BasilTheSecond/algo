@@ -174,7 +174,6 @@ EvaluateExpression::mTokenizeExpression()
 	{
 		std::string s;
 		ss >> s;
-		//std::cout << "[" << s << "]" << std::endl;
 		if (s == "/" || s == "*" || s == "+" || s == "-")
 		{
 			m_tokens.push_back(Token("OPERATOR", s));
