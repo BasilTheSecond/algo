@@ -15,6 +15,9 @@ public:
 	int mGetResult();
 
 private:
+	void mTokenizeExpression();
+
+private:
 	std::string m_expression;
 	std::vector<std::string> m_tokens;
 };
@@ -24,7 +27,15 @@ private:
 EvaluateExpression::EvaluateExpression(const std::string& expression) :
 m_expression(expression)
 {
-	std::stringstream ss(expression);
+	mTokenizeExpression();
+}
+
+//
+
+void 
+EvaluateExpression::mTokenizeExpression()
+{
+	std::stringstream ss(m_expression);
 	while (!ss.fail())
 	{
 		std::string token;
