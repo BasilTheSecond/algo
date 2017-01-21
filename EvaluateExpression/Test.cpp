@@ -185,6 +185,12 @@ main()
 	EvaluateExpressionTest evaluateExpressionTest4(testName4, expression4, result4);
 	EvaluateExpression evaluateExpression4(expression4);
 	evaluateExpressionTest4.mAssert(evaluateExpression4.mGetResult());
+	std::string testName5("Test 5");
+	std::string expression5("( 5 + ( 5 + ( 5 + ( 5 + ( 5 + ( 5 + 5 ) ) ) ) ) )");
+	int result5 = 0;
+	EvaluateExpressionTest evaluateExpressionTest5(testName5, expression5, result5);
+	EvaluateExpression evaluateExpression5(expression5);
+	evaluateExpressionTest5.mAssert(evaluateExpression5.mGetResult());
 	getchar();
   return 0;
 }
