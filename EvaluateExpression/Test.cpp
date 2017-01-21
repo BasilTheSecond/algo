@@ -65,7 +65,7 @@ EvaluateExpression::EvaluateExpression(const std::string& expression)
 		subExpression.push(m_expressionPrefix.top());
 		m_expressionPrefix.pop();
 	}
-	mEvaluateExpressionWithoutParanthesis(subExpression);
+	m_result = mEvaluateExpressionWithoutParanthesis(subExpression);
 }
 
 //
