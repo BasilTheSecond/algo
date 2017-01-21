@@ -19,11 +19,12 @@ public:
 private:
 	friend std::ostream& operator<<(std::ostream& os, const std::stack<std::string>& s);
 	friend std::ostream& operator<<(std::ostream& os, const std::queue<std::string>& q);
-	std::string mEvaluate(std::queue<std::string> expression);
+	std::string mEvaluateExpressionWithoutParanthesis(std::stack<std::string> expression);
 
 private:
-	std::stack<std::string> m_prefix;
+	std::stack<std::string> m_expressionPrefix;
 	std::queue<std::string> m_expression;
+	std::string m_result;
 };
 
 //
@@ -37,7 +38,33 @@ EvaluateExpression::EvaluateExpression(const std::string& expression)
 		ss >> token;
 		m_expression.push(token);
 	}
-	//std::cout << m_expression << std::endl;
+	while (m_expression.size() > 0)
+	{
+		std::string token = m_expression.front();
+		m_expression.pop();
+		if (token == ")")
+		{
+			std::stack<std::string> subExpression;
+			while (m_expressionPrefix.top() != "(")
+			{
+				subExpression.push(m_expressionPrefix.top());
+				m_expressionPrefix.pop();
+			}
+			m_expressionPrefix.pop(); // pop "("
+			std::cout << "Evaluate: " << subExpression << std::endl;
+		}
+		else
+		{
+			m_expressionPrefix.push(token);
+		}
+	}
+	std::stack<std::string> subExpression;
+	while (m_expressionPrefix.size() > 0)
+	{
+		subExpression.push(m_expressionPrefix.top());
+		m_expressionPrefix.pop();
+	}
+	std::cout << "Evaluate: " << subExpression << std::endl;
 }
 
 //
