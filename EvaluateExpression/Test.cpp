@@ -20,6 +20,14 @@ public:
 
 EvaluateExpression::EvaluateExpression(const std::string& expression)
 {
+	std::stack<std::string> s;
+	std::stringstream ss(expression);
+	while (!ss.eof())
+	{
+		std::string token;
+		ss >> token;
+		s.push(token);
+	}
 }
 
 //
@@ -96,7 +104,7 @@ main()
 	EvaluateExpression evaluateExpression3(expression3);
 	evaluateExpressionTest3.mAssert(evaluateExpression3.mGetResult());
 	std::string testName4("Test 4");
-	std::string expression4("(1 + 2) * 4 / (5 + (6 - 7) / 2 * 3)");
+	std::string expression4("( 1 + 2 ) * 4 / ( 5 + ( 6 - 7 ) / 2 * 3 )");
 	int result4 = 0;
 	EvaluateExpressionTest evaluateExpressionTest4(testName4, expression4, result4);
 	EvaluateExpression evaluateExpression4(expression4);
