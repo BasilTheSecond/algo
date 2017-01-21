@@ -126,7 +126,7 @@ EvaluateExpression::mEvaluateExpressionWithoutParanthesis(std::stack<std::string
 void 
 EvaluateExpression::mEvaluateExpressionWithoutParanthesis(std::stack<std::string>& expression, const std::string& operation)
 {
-	std::cout << "Evaluate " << operation << " in: " << expression << std::endl;
+	//std::cout << "Evaluate " << operation << " in: " << expression << std::endl;
 	std::stack<std::string> prefix;
 	while (expression.size() > 0)
 	{
