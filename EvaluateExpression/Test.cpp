@@ -17,8 +17,9 @@ public:
 	int mGetResult();
 
 private:
-	friend std::ostream& operator<<(std::ostream& os, std::stack<std::string>& s);
-	friend std::ostream& operator<<(std::ostream& os, std::queue<std::string>& s);
+	friend std::ostream& operator<<(std::ostream& os, const std::stack<std::string>& s);
+	friend std::ostream& operator<<(std::ostream& os, const std::queue<std::string>& q);
+	std::string mEvaluate(std::queue<std::string> expression);
 
 private:
 	std::stack<std::string> m_prefix;
@@ -29,30 +30,26 @@ private:
 
 EvaluateExpression::EvaluateExpression(const std::string& expression)
 {
-	std::stack<std::string> s;
 	std::stringstream ss(expression);
 	while (!ss.eof())
 	{
 		std::string token;
 		ss >> token;
-		s.push(token);
+		m_expression.push(token);
 	}
-	while (s.size() > 0)
-	{
-		m_expression.push(s.top());
-		s.pop();
-	}
+	//std::cout << m_expression << std::endl;
 }
 
 //
 
 std::ostream& 
-operator<<(std::ostream& os, std::queue<std::string>& s)
+operator<<(std::ostream& os, const std::queue<std::string>& q)
 {
-	while (s.size() > 0)
+	std::queue<std::string> temp = q;
+	while (temp.size() > 0)
 	{
-		os << "[" << s.front() << "]";
-		s.pop();
+		os << "[" << temp.front() << "]";
+		temp.pop();
 	}
 	return os;
 }
@@ -60,12 +57,13 @@ operator<<(std::ostream& os, std::queue<std::string>& s)
 //
 
 std::ostream&
-operator<<(std::ostream& os, std::stack<std::string>& s)
+operator<<(std::ostream& os, const std::stack<std::string>& s)
 {
-	while (s.size() > 0)
+	std::stack<std::string> temp = s;
+	while (temp.size() > 0)
 	{
-		os << "[" << s.top() << "]";
-		s.pop();
+		os << "[" << temp.top() << "]";
+		temp.pop();
 	}
 	return os;
 }
