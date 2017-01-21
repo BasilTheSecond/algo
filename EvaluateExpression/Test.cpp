@@ -67,6 +67,7 @@ m_result("-1000")
 		m_expressionPrefix.pop();
 	}
 	std::string& result = mEvaluateExpressionWithoutParanthesis(subExpression);
+	//m_result = result;
 }
 
 //
