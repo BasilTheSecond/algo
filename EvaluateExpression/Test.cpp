@@ -6,6 +6,7 @@
 #include <vector>
 #include <sstream>
 #include <stack>
+#include <queue>
 
 //
 
@@ -14,6 +15,14 @@ class EvaluateExpression
 public:
 	EvaluateExpression(const std::string& expression);
 	int mGetResult();
+
+private:
+	friend std::ostream& operator<<(std::ostream& os, std::stack<std::string>& s);
+	friend std::ostream& operator<<(std::ostream& os, std::queue<std::string>& s);
+
+private:
+	std::stack<std::string> m_prefix;
+	std::queue<std::string> m_expression;
 };
 
 //
@@ -28,6 +37,37 @@ EvaluateExpression::EvaluateExpression(const std::string& expression)
 		ss >> token;
 		s.push(token);
 	}
+	while (s.size() > 0)
+	{
+		m_expression.push(s.top());
+		s.pop();
+	}
+}
+
+//
+
+std::ostream& 
+operator<<(std::ostream& os, std::queue<std::string>& s)
+{
+	while (s.size() > 0)
+	{
+		os << "[" << s.front() << "]";
+		s.pop();
+	}
+	return os;
+}
+
+//
+
+std::ostream&
+operator<<(std::ostream& os, std::stack<std::string>& s)
+{
+	while (s.size() > 0)
+	{
+		os << "[" << s.top() << "]";
+		s.pop();
+	}
+	return os;
 }
 
 //
