@@ -29,7 +29,8 @@ private:
 
 //
 
-EvaluateExpression::EvaluateExpression(const std::string& expression)
+EvaluateExpression::EvaluateExpression(const std::string& expression) :
+m_result("-1000")
 {
 	std::stringstream ss(expression);
 	while (!ss.eof())
@@ -65,7 +66,7 @@ EvaluateExpression::EvaluateExpression(const std::string& expression)
 		subExpression.push(m_expressionPrefix.top());
 		m_expressionPrefix.pop();
 	}
-	m_result = mEvaluateExpressionWithoutParanthesis(subExpression);
+	std::string& result = mEvaluateExpressionWithoutParanthesis(subExpression);
 }
 
 //
@@ -101,7 +102,10 @@ operator<<(std::ostream& os, const std::stack<std::string>& s)
 int 
 EvaluateExpression::mGetResult()
 {
-	return -1000;
+	int result;
+	std::stringstream ss(m_result);
+	ss >> result;
+	return result;
 }
 
 //
