@@ -134,6 +134,9 @@ m_testName(testName),
 m_expression(expression),
 m_expectedResult(expectedResult)
 {
+	std::cout << m_testName << std::endl;
+	std::cout << "Expression: " << m_expression << std::endl;
+	std::cout << "Expected: " << m_expectedResult << std::endl;
 }
 
 //
@@ -141,9 +144,6 @@ m_expectedResult(expectedResult)
 void 
 EvaluateExpressionTest::mAssert(int result)
 {
-	std::cout << m_testName << std::endl;
-	std::cout << "Expression: " << m_expression << std::endl;
-	std::cout << "Expected: " << m_expectedResult << std::endl;
 	std::cout << "Actual: " << result << std::endl;
 	if (m_expectedResult == result)
 	{
@@ -187,7 +187,7 @@ main()
 	evaluateExpressionTest4.mAssert(evaluateExpression4.mGetResult());
 	std::string testName5("Test 5");
 	std::string expression5("( 5 + ( 5 + ( 5 + ( 5 + ( 5 + ( 5 + 5 ) ) ) ) ) )");
-	int result5 = 0;
+	int result5 = 35;
 	EvaluateExpressionTest evaluateExpressionTest5(testName5, expression5, result5);
 	EvaluateExpression evaluateExpression5(expression5);
 	evaluateExpressionTest5.mAssert(evaluateExpression5.mGetResult());
