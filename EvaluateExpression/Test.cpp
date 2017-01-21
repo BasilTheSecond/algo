@@ -68,7 +68,7 @@ m_result("-1000")
 		prefix.pop();
 	}
 	mEvaluateExpressionWithoutParanthesis(reversePrefix);
-	//m_result = reversePrefix.top();
+	m_result = reversePrefix.top();
 }
 
 //
@@ -119,9 +119,6 @@ EvaluateExpression::mEvaluateExpressionWithoutParanthesis(std::stack<std::string
 	mEvaluateExpressionWithoutParanthesis(expression, "*");
 	mEvaluateExpressionWithoutParanthesis(expression, "+");
 	mEvaluateExpressionWithoutParanthesis(expression, "-");
-	std::stack<std::string> s;
-	s.push(std::string("RESULT"));
-	expression = s;
 }
 
 //
@@ -131,6 +128,54 @@ EvaluateExpression::mEvaluateExpressionWithoutParanthesis(std::stack<std::string
 {
 	std::cout << "Evaluate " << operation << " in: " << expression << std::endl;
 	std::stack<std::string> prefix;
+	while (expression.size() > 0)
+	{
+		std::string token = expression.top();
+		expression.pop();
+		if (token != operation)
+		{
+			prefix.push(token);
+		}
+		else
+		{
+			int op1 = std::stoi(prefix.top());
+			prefix.pop();
+			int op2 = std::stoi(expression.top());
+			expression.pop();
+			int result = 0;
+			if (operation == "/")
+			{
+				if (op2 == 0)
+				{
+					result = op1 > 0 ? std::numeric_limits<int>::max() : std::numeric_limits<int>::lowest();
+				}
+				else
+				{
+					result = op1 / op2;
+				}
+			}
+			else if (operation == "*")
+			{
+				result = op1 * op2;
+			}
+			else if (operation == "+")
+			{
+				result = op1 + op2;
+			}
+			else if (operation == "-")
+			{
+				result = op1 - op2;
+			}
+			std::stringstream ss;
+			ss << result;
+			prefix.push(ss.str());
+		}
+	}
+	while (prefix.size() > 0)
+	{
+		expression.push(prefix.top());
+		prefix.pop();
+	}
 }
 
 //
