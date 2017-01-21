@@ -51,7 +51,8 @@ EvaluateExpression::EvaluateExpression(const std::string& expression)
 				m_expressionPrefix.pop();
 			}
 			m_expressionPrefix.pop(); // pop "("
-			std::cout << "Evaluate: " << subExpression << std::endl;
+			std::string& result = mEvaluateExpressionWithoutParanthesis(subExpression);
+			m_expressionPrefix.push(result);
 		}
 		else
 		{
@@ -64,7 +65,7 @@ EvaluateExpression::EvaluateExpression(const std::string& expression)
 		subExpression.push(m_expressionPrefix.top());
 		m_expressionPrefix.pop();
 	}
-	std::cout << "Evaluate: " << subExpression << std::endl;
+	mEvaluateExpressionWithoutParanthesis(subExpression);
 }
 
 //
@@ -97,9 +98,19 @@ operator<<(std::ostream& os, const std::stack<std::string>& s)
 
 //
 
-int EvaluateExpression::mGetResult()
+int 
+EvaluateExpression::mGetResult()
 {
 	return -1000;
+}
+
+//
+
+std::string
+EvaluateExpression::mEvaluateExpressionWithoutParanthesis(std::stack<std::string> expression)
+{
+	std::cout << "Evaluate: " << expression << std::endl;
+	return std::string("RESULT");
 }
 
 //
