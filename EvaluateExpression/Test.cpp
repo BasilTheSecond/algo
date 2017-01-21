@@ -22,7 +22,6 @@ private:
 	std::string mEvaluateExpressionWithoutParanthesis(std::stack<std::string> expression);
 
 private:
-	std::stack<std::string> m_expressionPrefix;
 	std::string m_result;
 };
 
@@ -33,6 +32,7 @@ m_result("-1000")
 {
 	std::stringstream ss(e);
 	std::queue<std::string> expression;
+	std::stack<std::string> prefix;
 	while (!ss.eof())
 	{
 		std::string token;
@@ -45,28 +45,28 @@ m_result("-1000")
 		expression.pop();
 		if (token == ")")
 		{
-			std::stack<std::string> subExpression;
-			while (m_expressionPrefix.top() != "(")
+			std::stack<std::string> subexpression;
+			while (prefix.top() != "(")
 			{
-				subExpression.push(m_expressionPrefix.top());
-				m_expressionPrefix.pop();
+				subexpression.push(prefix.top());
+				prefix.pop();
 			}
-			m_expressionPrefix.pop(); // pop "("
-			std::string& result = mEvaluateExpressionWithoutParanthesis(subExpression);
-			m_expressionPrefix.push(result);
+			prefix.pop(); // pop "("
+			std::string& result = mEvaluateExpressionWithoutParanthesis(subexpression);
+			prefix.push(result);
 		}
 		else
 		{
-			m_expressionPrefix.push(token);
+			prefix.push(token);
 		}
 	}
-	std::stack<std::string> subExpression;
-	while (m_expressionPrefix.size() > 0)
+	std::stack<std::string> subexpression;
+	while (prefix.size() > 0)
 	{
-		subExpression.push(m_expressionPrefix.top());
-		m_expressionPrefix.pop();
+		subexpression.push(prefix.top());
+		prefix.pop();
 	}
-	std::string& result = mEvaluateExpressionWithoutParanthesis(subExpression);
+	std::string& result = mEvaluateExpressionWithoutParanthesis(subexpression);
 	//m_result = result;
 }
 
