@@ -60,13 +60,13 @@ m_result("-1000")
 			prefix.push(token);
 		}
 	}
-	std::stack<std::string> subexpression;
+	std::stack<std::string> reversePrefix;
 	while (prefix.size() > 0)
 	{
-		subexpression.push(prefix.top());
+		reversePrefix.push(prefix.top());
 		prefix.pop();
 	}
-	std::string& result = mEvaluateExpressionWithoutParanthesis(subexpression);
+	std::string& result = mEvaluateExpressionWithoutParanthesis(reversePrefix);
 	//m_result = result;
 }
 
