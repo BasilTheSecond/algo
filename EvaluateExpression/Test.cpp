@@ -19,7 +19,8 @@ public:
 private:
 	friend std::ostream& operator<<(std::ostream& os, const std::stack<std::string>& s);
 	friend std::ostream& operator<<(std::ostream& os, const std::queue<std::string>& q);
-	std::string mEvaluateExpressionWithoutParanthesis(std::stack<std::string> expression);
+	void mEvaluateExpressionWithoutParanthesis(std::stack<std::string>& expression);
+	void mEvaluate(std::stack<std::string>& expression, const std::string& operation);
 
 private:
 	std::string m_result;
@@ -52,8 +53,8 @@ m_result("-1000")
 				prefix.pop();
 			}
 			prefix.pop(); // pop "("
-			std::string& result = mEvaluateExpressionWithoutParanthesis(subexpression);
-			prefix.push(result);
+			mEvaluateExpressionWithoutParanthesis(subexpression);
+			prefix.push(subexpression.top());
 		}
 		else
 		{
@@ -66,8 +67,8 @@ m_result("-1000")
 		reversePrefix.push(prefix.top());
 		prefix.pop();
 	}
-	std::string& result = mEvaluateExpressionWithoutParanthesis(reversePrefix);
-	//m_result = result;
+	mEvaluateExpressionWithoutParanthesis(reversePrefix);
+	//m_result = reversePrefix.top();
 }
 
 //
@@ -111,11 +112,25 @@ EvaluateExpression::mGetResult()
 
 //
 
-std::string
-EvaluateExpression::mEvaluateExpressionWithoutParanthesis(std::stack<std::string> expression)
+void
+EvaluateExpression::mEvaluateExpressionWithoutParanthesis(std::stack<std::string>& expression)
 {
 	std::cout << "Evaluate: " << expression << std::endl;
-	return std::string("RESULT");
+	std::stack<std::string> prefix;
+	mEvaluate(expression, "/");
+	mEvaluate(expression, "*");
+	mEvaluate(expression, "+");
+	mEvaluate(expression, "-");
+	std::stack<std::string> s;
+	s.push(std::string("RESULT"));
+	expression = s;
+}
+
+//
+
+void 
+EvaluateExpression::mEvaluate(std::stack<std::string>& expression, const std::string& operation)
+{
 }
 
 //
