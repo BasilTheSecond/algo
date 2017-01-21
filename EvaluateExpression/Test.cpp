@@ -13,7 +13,7 @@
 class EvaluateExpression
 {
 public:
-	EvaluateExpression(const std::string& expression);
+	EvaluateExpression(const std::string& e);
 	int mGetResult();
 
 private:
@@ -23,26 +23,26 @@ private:
 
 private:
 	std::stack<std::string> m_expressionPrefix;
-	std::queue<std::string> m_expression;
 	std::string m_result;
 };
 
 //
 
-EvaluateExpression::EvaluateExpression(const std::string& expression) :
+EvaluateExpression::EvaluateExpression(const std::string& e) :
 m_result("-1000")
 {
-	std::stringstream ss(expression);
+	std::stringstream ss(e);
+	std::queue<std::string> expression;
 	while (!ss.eof())
 	{
 		std::string token;
 		ss >> token;
-		m_expression.push(token);
+		expression.push(token);
 	}
-	while (m_expression.size() > 0)
+	while (expression.size() > 0)
 	{
-		std::string token = m_expression.front();
-		m_expression.pop();
+		std::string token = expression.front();
+		expression.pop();
 		if (token == ")")
 		{
 			std::stack<std::string> subExpression;
